@@ -23,7 +23,7 @@ import org.springframework.stereotype.Controller;
 @ComponentScan(basePackages = {"com.**.service"}, excludeFilters = {@ComponentScan.Filter(type = FilterType.ANNOTATION, value = {Controller.class})})
 //引入配置信息
 //引入相关程序的配置文件
-@Import({MVCConfig.class, JavaMailConfig.class,/* AopConfig.class,*//*MyBatisConfig.class,*/ PersistenceConfig.class})
+@Import({MVCConfig.class, JavaMailConfig.class, AopConfig.class,/*MyBatisConfig.class,*/ PersistenceConfig.class})
 public class AppConfig {
     private static final Logger LOGGER = LoggerFactory.getLogger(AppConfig.class);
 

@@ -1,5 +1,6 @@
 package com.august.config;
 
+import com.august.domain.hibernate.User;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
@@ -8,18 +9,20 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
+import java.util.List;
+
 /**
  * PROJECT_NAME: core
  * PACKAGE_NAME: com.august.config
  * Author: August
  * Update: August(2015/8/23)
  * Description:创建//加入AspectJ的动态代理（非必需）
+ * http://my.oschina.net/u/1998885/blog/483884?p={{totalPage}}
  */
-//@Configuration//表示该类是一个配置文件 //标注此类为配置类（必有）
+@Configuration//表示该类是一个配置文件 //标注此类为配置类（必有）
 //加入AspectJ的动态代理，替换掉下面的注释部分的注入
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 @Aspect
-
 public class AopConfig {
     //定义日志记录器
     private static final Logger LOGGER = LoggerFactory.getLogger(AopConfig.class);
@@ -31,7 +34,7 @@ public class AopConfig {
      * <tx:method name="*" propagation="REQUIRED" rollback-for="Exception"/>
      * </tx:attributes>
      * </tx:advice>
-     * <p/>
+     * <p>
      * //激活自动代理功能
      * <aop:config proxy-target-class="true">
      * <aop:pointcut id="transactionPointcut" expression="execution(* com.handu.base.**.service.*.*(..))"/>
@@ -81,14 +84,14 @@ public class AopConfig {
     /**
      * 配置环绕通知,使用在方法myMethod()上注册的切入点
      * 手动控制调用核心业务逻辑，以及调用前和调用后的处理,
-     * <p/>
+     * <p>
      * 注意：当核心业务抛异常后，立即退出，转向AfterAdvice
      * 执行完AfterAdvice，再转到ThrowingAdvice
      *
      * @param joinPoint
      */
     @Around(value = "myMethod()")
-    public void around(JoinPoint joinPoint) {
+    public Object around(JoinPoint joinPoint) {
         System.out.println("-----aroundAdvice().invoke-----");
         System.out.println(" 此处可以做类似于Before Advice的事情");
 
@@ -97,8 +100,14 @@ public class AopConfig {
         System.out.println(" 此处可以做类似于After Advice的事情");
         System.out.println("-----End of aroundAdvice()------");
         long start = System.currentTimeMillis();
+        Object result=null;
         try {
-            ((ProceedingJoinPoint) joinPoint).proceed();
+             result = ((ProceedingJoinPoint) joinPoint).proceed();
+            System.out.println();
+            if (result instanceof User) {
+                System.out.println(result);
+            }
+            LOGGER.info("consuming {}s", System.currentTimeMillis() - start);
             long end = System.currentTimeMillis();
             if (LOGGER.isInfoEnabled()) {
                 LOGGER.info("around " + joinPoint + "\tUse time : " + (end - start) + " ms!");
@@ -109,6 +118,7 @@ public class AopConfig {
                 LOGGER.info("around " + joinPoint + "\tUse time : " + (end - start) + " ms with exception : " + e.getMessage());
             }
         }
+        return result;
     }
 
     /**
@@ -120,6 +130,8 @@ public class AopConfig {
         Object[] objects = joinPoint.getArgs();
         for (Object o : objects) {
             System.out.println(o);
+            User user= (User) o;
+            user.setName("f=后置通知");
         }
         System.out.println(result);
         System.out.println("========checkSecurity==" + joinPoint.getSignature().getName());//这个是获得方法名
@@ -135,7 +147,7 @@ public class AopConfig {
     /**
      * 配置抛出异常后通知,使用在方法myMethod()上注册的切入点
      * 核心业务逻辑调用异常退出后，执行此Advice，处理错误信息
-     * <p/>
+     * <p>
      * 注意：执行顺序在Around Advice之后
      */
     @AfterThrowing(pointcut = "myMethod()", throwing = "ex")
