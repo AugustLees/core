@@ -5,6 +5,8 @@ import com.august.domain.hibernate.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -19,6 +21,16 @@ public class UserService  {
     @Autowired
     private UserRepository userRepository;
     public List<User> getUserList() {
-        return (List<User>) userRepository.findAll();
+//        return (List<User>) userRepository.findAll();
+        List<User> users=new ArrayList<User>();
+        for (int i=0;i<9;i++){
+            User user=new User();
+            user.setId(i);
+            user.setBirthday(new Date());
+            user.setEmail("Email地址");
+            user.setPassword("密码测试");
+            users.add(user);
+        }
+        return users;
     }
 }

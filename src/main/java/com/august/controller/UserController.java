@@ -27,4 +27,10 @@ public class UserController {
     public List<User> getUserList() {
         return this.userService.getUserList();
     }
+
+    @ResponseBody
+    @RequestMapping(value = "addUser")
+    public String addUser() {
+        return "添加成功";
+    }
 }

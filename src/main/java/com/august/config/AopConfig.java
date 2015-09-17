@@ -5,11 +5,6 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.aop.Advisor;
-import org.springframework.aop.aspectj.AspectJExpressionPointcut;
-import org.springframework.aop.interceptor.PerformanceMonitorInterceptor;
-import org.springframework.aop.support.DefaultPointcutAdvisor;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
@@ -20,10 +15,11 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
  * Update: August(2015/8/23)
  * Description:创建//加入AspectJ的动态代理（非必需）
  */
-@Configuration//表示该类是一个配置文件 //标注此类为配置类（必有）
+//@Configuration//表示该类是一个配置文件 //标注此类为配置类（必有）
 //加入AspectJ的动态代理，替换掉下面的注释部分的注入
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 @Aspect
+
 public class AopConfig {
     //定义日志记录器
     private static final Logger LOGGER = LoggerFactory.getLogger(AopConfig.class);
@@ -35,7 +31,7 @@ public class AopConfig {
      * <tx:method name="*" propagation="REQUIRED" rollback-for="Exception"/>
      * </tx:attributes>
      * </tx:advice>
-     * <p>
+     * <p/>
      * //激活自动代理功能
      * <aop:config proxy-target-class="true">
      * <aop:pointcut id="transactionPointcut" expression="execution(* com.handu.base.**.service.*.*(..))"/>
@@ -43,16 +39,16 @@ public class AopConfig {
      * </aop:config>
      */
     //配置切入点,该方法无方法体,主要为方便同类中其他方法使用此处配置的切入点
-    @Pointcut("execution(* com.august.**.service..*(..))")
-    public void aspect() {
+    @Pointcut(value = "execution(* com.**.service..*(..))")
+    public void myMethod() {
     }
 
     /*
-     * 配置前置通知,使用在方法aspect()上注册的切入点
+     * 配置前置通知,使用在方法myMethod()上注册的切入点
      * 同时接受JoinPoint切入点对象,可以没有该参数
      * 在核心业务执行前执行，不能阻止核心业务的调用。
      */
-    @Before("aspect()")
+    @Before(value = "myMethod()")
     public void before(JoinPoint joinPoint) {
         System.out.println("-----beforeAdvice().invoke-----");
         System.out.println(" 此处意在执行核心业务逻辑前，做一些安全性的判断等等");
@@ -65,12 +61,12 @@ public class AopConfig {
 
 
     /**
-     * 配置后置通知,使用在方法aspect()上注册的切入点
+     * 配置后置通知,使用在方法myMethod()上注册的切入点
      * 核心业务逻辑退出后（包括正常执行结束和异常退出），执行此Advice
      *
      * @param joinPoint
      */
-    @After("aspect()")
+    @After(value = "myMethod()")
     public void after(JoinPoint joinPoint) {
         System.out.println("-----afterAdvice().invoke-----");
         System.out.println(" 此处意在执行核心业务逻辑之后，做一些日志记录操作等等");
@@ -83,15 +79,15 @@ public class AopConfig {
 
 
     /**
-     * 配置环绕通知,使用在方法aspect()上注册的切入点
+     * 配置环绕通知,使用在方法myMethod()上注册的切入点
      * 手动控制调用核心业务逻辑，以及调用前和调用后的处理,
-     * <p>
+     * <p/>
      * 注意：当核心业务抛异常后，立即退出，转向AfterAdvice
      * 执行完AfterAdvice，再转到ThrowingAdvice
      *
      * @param joinPoint
      */
-    @Around("aspect()")
+    @Around(value = "myMethod()")
     public void around(JoinPoint joinPoint) {
         System.out.println("-----aroundAdvice().invoke-----");
         System.out.println(" 此处可以做类似于Before Advice的事情");
@@ -116,11 +112,17 @@ public class AopConfig {
     }
 
     /**
-     * 配置后置返回通知,使用在方法aspect()上注册的切入点
+     * 配置后置返回通知,使用在方法myMethod()上注册的切入点
      * 核心业务逻辑调用正常退出后，不管是否有返回值，正常退出后，均执行此Advice
      */
-    @AfterReturning("aspect()")
-    public void afterReturn(JoinPoint joinPoint) {
+    @AfterReturning(value = "myMethod()", returning = "result")
+    public void afterReturn(JoinPoint joinPoint, Object result) {
+        Object[] objects = joinPoint.getArgs();
+        for (Object o : objects) {
+            System.out.println(o);
+        }
+        System.out.println(result);
+        System.out.println("========checkSecurity==" + joinPoint.getSignature().getName());//这个是获得方法名
         System.out.println("-----afterReturningAdvice().invoke-----");
         System.out.println(" 此处可以对返回值做进一步处理");
         System.out.println(" 可通过joinPoint来获取所需要的内容");
@@ -131,12 +133,12 @@ public class AopConfig {
     }
 
     /**
-     * 配置抛出异常后通知,使用在方法aspect()上注册的切入点
+     * 配置抛出异常后通知,使用在方法myMethod()上注册的切入点
      * 核心业务逻辑调用异常退出后，执行此Advice，处理错误信息
-     * <p>
+     * <p/>
      * 注意：执行顺序在Around Advice之后
      */
-    @AfterThrowing(pointcut = "aspect()", throwing = "ex")
+    @AfterThrowing(pointcut = "myMethod()", throwing = "ex")
     public void afterThrow(JoinPoint joinPoint, Exception ex) {
         System.out.println("-----afterThrowingAdvice().invoke-----");
         System.out.println(" 错误信息：" + ex.getMessage());
