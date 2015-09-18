@@ -8,22 +8,20 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.format.support.FormattingConversionServiceFactoryBean;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.scheduling.config.AnnotationDrivenBeanDefinitionParser;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
-import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.TimeZone;
 
 /**
  * PROJECT_NAME: core
@@ -35,20 +33,20 @@ import java.util.TimeZone;
 @Configuration
 @EnableWebMvc//允许开启WEB mvc模式
 //扫描基本包路径  spring mvc 自动扫描注解的时候，不去扫描@Service,mvc层只负责扫描@Controller
-@ComponentScan(basePackages = "com.august.controller", useDefaultFilters = false,
+@ComponentScan(basePackages = "com.**.controller", useDefaultFilters = false,
         excludeFilters = {@ComponentScan.Filter(type = FilterType.ANNOTATION, value = {Service.class})
         }, includeFilters = {@ComponentScan.Filter(type = FilterType.ANNOTATION, value = {Controller.class})})
 //启动Spring MVC的注解功能，完成请求和注解POJO的映射
 public class MVCConfig extends WebMvcConfigurerAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(MVCConfig.class);
 
-//    //控制日期格式的
-//    @Bean(name = "conversionService")
-//    public FormattingConversionServiceFactoryBean formattingConversionServiceFactoryBean() {
-//        LOGGER.debug("MVC CONFIG 中 注册日期格式转换服务器……");
-//        System.out.println("MVC CONFIG 中 注册日期格式转换服务器……");
-//        return new FormattingConversionServiceFactoryBean();
-//    }
+    //控制日期格式的
+    @Bean(name = "conversionService")
+    public FormattingConversionServiceFactoryBean formattingConversionServiceFactoryBean() {
+        LOGGER.debug("MVC CONFIG  中 1、注册日期格式转换服务器……");
+        System.out.println("MVC CONFIG  中 1、注册日期格式转换服务器……");
+        return new FormattingConversionServiceFactoryBean();
+    }
 
     /**
      * 对模型视图名称的解析，即在模型视图名称添加前后缀
@@ -57,8 +55,8 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
      */
     @Bean
     public InternalResourceViewResolver internalResourceViewResolver() {
-        LOGGER.debug("MVC CONFIG 中 对模型视图名称的解析，即在模型视图名称添加前后缀……");
-        System.out.println("MVC CONFIG 中 对模型视图名称的解析，即在模型视图名称添加前后缀……");
+        LOGGER.debug("MVC CONFIG 中 7、对模型视图名称的解析，即在模型视图名称添加前后缀……");
+        System.out.println("MVC CONFIG 中 7、对模型视图名称的解析，即在模型视图名称添加前后缀……");
         InternalResourceViewResolver internalResourceViewResolver = new InternalResourceViewResolver();
         internalResourceViewResolver.setPrefix("/WEB-INF/");
         internalResourceViewResolver.setSuffix("*.jsp");
@@ -74,27 +72,26 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
      */
     @Bean
     public CommonsMultipartResolver commonsMultipartResolver() {
-        LOGGER.debug("MVC CONFIG 中 设置文件上传管理器……");
-        System.out.println("MVC CONFIG 中 设置文件上传管理器……");
+        LOGGER.debug("MVC CONFIG 中 8、设置文件上传管理器……");
+        System.out.println("MVC CONFIG 中 8、设置文件上传管理器……");
         CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
         commonsMultipartResolver.setDefaultEncoding("UTF-8");
         commonsMultipartResolver.setMaxUploadSize(10000000L);
         return commonsMultipartResolver;
     }
 
-    @Bean//注册时间各格式器
+    @Bean//定义全局日期格式
     public SimpleDateFormat simpleDateFormat() {
-        LOGGER.debug("MVC CONFIG 中 注册时间各格式器……");
-        System.out.println("MVC CONFIG 中 注册时间各格式器……");
+        LOGGER.debug("MVC CONFIG 中 4、定义全局日期格式……");
+        System.out.println("MVC CONFIG 中 4、定义全局日期格式……");
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     }
 
     @Bean
     public ObjectMapper objectMapper() {
-        LOGGER.debug("MVC CONFIG 中 将时间格式器注入到mapper对象中……");
-        System.out.println("MVC CONFIG中 将时间格式器注入到mapper对象中……");
+        LOGGER.debug("MVC CONFIG 中 3、将时间格式器注入到mapper对象中……");
+        System.out.println("MVC CONFIG 中 3、将时间格式器注入到mapper对象中……");
         ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.setTimeZone(TimeZone.getDefault());
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         objectMapper.setDateFormat(simpleDateFormat());
         return objectMapper;
@@ -108,8 +105,8 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
      */
     @Bean
     public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
-        LOGGER.debug("MVC CONFIG 中 注入MappingJackson2HttpMessageConverter组件避免出现下载现象……");
-        System.out.println("MVC CONFIG 中 注入MappingJackson2HttpMessageConverter组件避免出现下载现象…………");
+        LOGGER.debug("MVC CONFIG 中 2、注入MappingJackson2HttpMessageConverter组件避免出现下载现象……");
+        System.out.println("MVC CONFIG 中 2、注入MappingJackson2HttpMessageConverter组件避免出现下载现象…………");
         MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
         mappingJackson2HttpMessageConverter.setPrefixJson(true);
         mappingJackson2HttpMessageConverter.setObjectMapper(objectMapper());
@@ -119,28 +116,26 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
 
     @Bean
     public StringHttpMessageConverter stringHttpMessageConverter() {
-        LOGGER.debug("MVC CONFIG 中 注入stringHttpMessageConverter组件,避免返回值出现乱码……");
-        System.out.println("MVC CONFIG 中 注入stringHttpMessageConverter组件,避免返回值出现乱码…………");
+        LOGGER.debug("MVC CONFIG 中 6、注入stringHttpMessageConverter组件……");
+        System.out.println("MVC CONFIG 中 6、注入stringHttpMessageConverter组件…………");
         StringHttpMessageConverter stringHttpMessageConverter = new StringHttpMessageConverter();
         stringHttpMessageConverter.setSupportedMediaTypes(Arrays.asList(MediaType.TEXT_HTML, MediaType.TEXT_PLAIN));
         return stringHttpMessageConverter;
     }
-//
+
 //    @Bean
 //    public AnnotationDrivenBeanDefinitionParser annotationDrivenBeanDefinitionParser() {
-//        LOGGER.debug("MVC CONFIG 中 开启MVC注解驱动……");
-//        System.out.println("MVC CONFIG 中 开启MVC注解驱动…………");
+//        LOGGER.debug("MVC CONFIG 中 5、开启MVC注解驱动……");
+//        System.out.println("MVC CONFIG 中 5、开启MVC注解驱动…………");
 //        AnnotationDrivenBeanDefinitionParser annotationDrivenBeanDefinitionParser = new AnnotationDrivenBeanDefinitionParser();
 //        return annotationDrivenBeanDefinitionParser;
 //    }
-
+//
 //    //RequestMappingHandlerAdapter需要显示声明，否则不能注册通用属性编辑器
 //    @Bean
 //    public RequestMappingHandlerAdapter requestMappingHandlerAdapter() {
-//        LOGGER.debug("MVC CONFIG 中RequestMappingHandlerAdapter需要显示声明，否则不能注册通用属性编辑器……");
-//        System.out.println("MVC CONFIG 中RequestMappingHandlerAdapter需要显示声明，否则不能注册通用属性编辑器…………");
 //        RequestMappingHandlerAdapter requestMappingHandlerAdapter = new RequestMappingHandlerAdapter();
-////        requestMappingHandlerAdapter.setMessageConverters(Arrays.<HttpMessageConverter<?>>asList(mappingJackson2HttpMessageConverter()));
+//        requestMappingHandlerAdapter.setMessageConverters(Arrays.<HttpMessageConverter<?>>asList(mappingJackson2HttpMessageConverter()));
 //        return requestMappingHandlerAdapter;
 //    }
 //

@@ -9,8 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
-import java.util.List;
-
 /**
  * PROJECT_NAME: core
  * PACKAGE_NAME: com.august.config
@@ -102,7 +100,7 @@ public class AopConfig {
         long start = System.currentTimeMillis();
         Object result=null;
         try {
-             result = ((ProceedingJoinPoint) joinPoint).proceed();
+            result = ((ProceedingJoinPoint) joinPoint).proceed();
             System.out.println();
             if (result instanceof User) {
                 System.out.println(result);

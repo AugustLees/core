@@ -1,12 +1,13 @@
 package com.august.service;
 
+import com.august.dao.mapper.UserMapper;
 import com.august.dao.repositories.UserRepository;
 import com.august.domain.hibernate.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
 /**
@@ -17,20 +18,23 @@ import java.util.List;
  * Description:测试用户服务接口
  */
 @Service
-public class UserService  {
+public class UserService {
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserMapper userMapper;
+
     public List<User> getUserList() {
-        List<User> users=new ArrayList<User>();
-        for (int i=0;i<9;i++){
-            User user=new User();
-            user.setId(i);
-            user.setBirthday(new Date());
-            user.setEmail("Email地址");
-            user.setPassword("密码测试");
-            users.add(user);
-        }
+//        List<User> users = (List<User>) userRepository.findAll();
+        List<User> users = (List<User>) userMapper.getAllUsers();
+        System.out.println(users.size());
         return users;
-//        return (List<User>) userRepository.findAll();
+    }
+
+
+    public void addUser(User user) {
+//        userMapper.addUser(user);
+        userRepository.save(user);
     }
 }

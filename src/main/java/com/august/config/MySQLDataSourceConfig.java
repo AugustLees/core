@@ -18,8 +18,8 @@ import java.sql.SQLException;
  * Description:数据源配置文件
  */
 @Configuration
-public class DataSourceConfig {
-    private static final Logger LOGGER = LoggerFactory.getLogger(DataSourceConfig.class);
+public class MySQLDataSourceConfig {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MySQLDataSourceConfig.class);
     /*
      * 绑定资源属性
      */
@@ -27,7 +27,7 @@ public class DataSourceConfig {
     @Value("${driverClassName:com.mysql.jdbc.Driver}")
     String driverClassName;
     //数据库地址
-    @Value("${jdbc.url:jdbc:mysql://localhost:3306/quartz_demo?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull}")
+    @Value("${jdbc.url:jdbc:mysql://localhost:3306/quartz-demo?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull}")
     String url;
 
     //数据库访问用户名
@@ -77,10 +77,10 @@ public class DataSourceConfig {
      * @return
      * @throws SQLException
      */
-    @Bean(name = "myDruidDataSource", initMethod = "init", destroyMethod = "close")
+    @Bean(name = "mySqlDruidDataSource", initMethod = "init", destroyMethod = "close")
     public DataSource druidDataSource() throws SQLException {
-        System.out.println("DataSourceConfig 中 1、初始化数据源……");
-        LOGGER.debug("DataSourceConfig 中 1、初始化数据源……");
+        System.out.println("MySQLDataSourceConfig 中 1、初始化数据源……");
+        LOGGER.debug("MySQLDataSourceConfig 中 1、初始化数据源……");
         DruidDataSource druidDataSource = new DruidDataSource();
         druidDataSource.setName("Mysql数据库");
         druidDataSource.setDbType("mysql");
@@ -120,7 +120,7 @@ public class DataSourceConfig {
 //        日志用的filter:log4j
 //        防御SQL注入的filter:wall
         druidDataSource.setFilters("mergeStat,log4j,wall");
-        System.out.println("DataSourceConfig 中 1、初始化SQLSessionFactory数据源……结束");
+        System.out.println("MySQLDataSourceConfig 中 1、初始化SQLSessionFactory数据源……结束");
         return druidDataSource;
     }
 }
