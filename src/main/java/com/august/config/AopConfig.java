@@ -1,6 +1,7 @@
 package com.august.config;
 
 import com.august.domain.hibernate.User;
+import com.august.utils.StaticConstant;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
@@ -40,7 +41,7 @@ public class AopConfig {
      * </aop:config>
      */
     //配置切入点,该方法无方法体,主要为方便同类中其他方法使用此处配置的切入点
-    @Pointcut(value = "execution(* com.**.service..*(..))")
+    @Pointcut(value = StaticConstant.POINTCUT_ASPECT_POINT_CUT)
     public void myMethod() {
     }
 
@@ -98,7 +99,7 @@ public class AopConfig {
         System.out.println(" 此处可以做类似于After Advice的事情");
         System.out.println("-----End of aroundAdvice()------");
         long start = System.currentTimeMillis();
-        Object result=null;
+        Object result = null;
         try {
             result = ((ProceedingJoinPoint) joinPoint).proceed();
             System.out.println();
@@ -128,7 +129,7 @@ public class AopConfig {
         Object[] objects = joinPoint.getArgs();
         for (Object o : objects) {
             System.out.println(o);
-            User user= (User) o;
+            User user = (User) o;
             user.setName("f=后置通知");
         }
         System.out.println(result);

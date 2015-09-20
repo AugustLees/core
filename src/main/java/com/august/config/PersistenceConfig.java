@@ -1,6 +1,8 @@
 package com.august.config;
 
 import com.alibaba.druid.pool.DruidDataSource;
+import com.august.utils.StaticConstant;
+import org.hibernate.ejb.HibernatePersistence;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +25,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.annotation.Resource;
+import javax.persistence.PersistenceUnit;
 import javax.transaction.Transactional;
 import java.util.Properties;
 
@@ -39,7 +42,7 @@ import java.util.Properties;
 @EnableTransactionManagement(proxyTargetClass = true)
 //启用Jpa配置
 //配置jpa扫描基本实现类,即数据库操作层相关实现
-@EnableJpaRepositories(basePackages = "com.**.repositories")
+@EnableJpaRepositories(basePackages = StaticConstant.JPA_BASE_PACKAGES)
 @Import(DataSourceConfig.class)
 public class PersistenceConfig {
     //定义日志记录器
@@ -81,7 +84,8 @@ public class PersistenceConfig {
     public HibernatePersistenceProvider hibernatePersistenceProvider() {
         LOGGER.debug("PersistenceConfig 中 2、配置 持久化类服务提供者……");
         System.out.println("PersistenceConfig 中 2、配置 持久化类服务提供者……");
-        return new HibernatePersistenceProvider();
+        HibernatePersistenceProvider hibernatePersistenceProvider = new HibernatePersistenceProvider();
+        return hibernatePersistenceProvider;
     }
 
     /**
@@ -103,6 +107,7 @@ public class PersistenceConfig {
      * @return
      */
     @Bean(name = "entityManagerFactory")
+    @PersistenceUnit(unitName="JPAEntityManagerFactory")
     public LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean() {
         LOGGER.debug("PersistenceConfig 中 1、配置 EntityManagerFactory……");
         System.out.println("PersistenceConfig 中 1、配置 EntityManagerFactory……");
@@ -117,9 +122,8 @@ public class PersistenceConfig {
         localContainerEntityManagerFactoryBean.setJpaDialect(hibernateJpaDialect());
         //配置 JPA 提供商的适配器. 可以通过内部 bean 的方式来配置
         localContainerEntityManagerFactoryBean.setJpaVendorAdapter(hibernateJpaVendorAdapter());
-        String[] packagesToScan = new String[]{"com.august.**.domain.**"};
         //配置实体类所在的包
-        localContainerEntityManagerFactoryBean.setPackagesToScan(packagesToScan);
+        localContainerEntityManagerFactoryBean.setPackagesToScan(new String[]{StaticConstant.JPA_PACKAGES_TO_SCAN});
         //配置 JPA 的基本属性. 例如 JPA 实现产品的属性
         Properties properties = new Properties();
         properties.setProperty("hibernate.dialect", hibernate_dialect);
@@ -163,11 +167,12 @@ public class PersistenceConfig {
         DataSourceInitializer dataSourceInitializer = new DataSourceInitializer();
         dataSourceInitializer.setDataSource(druidDataSource);
         ResourceDatabasePopulator databasePopulator = new ResourceDatabasePopulator();
-        databasePopulator.addScript(new ClassPathResource("db/db.sql"));
+        databasePopulator.addScript(new ClassPathResource(StaticConstant.DATASOURCE_INIT_CLASS_PATH_RESOURCE));
         dataSourceInitializer.setDatabasePopulator(databasePopulator);
         dataSourceInitializer.setEnabled(Boolean.parseBoolean(initDatabase));
         return dataSourceInitializer;
     }
+
 }
 
 

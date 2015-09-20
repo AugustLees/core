@@ -1,5 +1,6 @@
 package com.august.config;
 
+import com.august.utils.StaticConstant;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -33,9 +34,11 @@ import java.util.Arrays;
 @Configuration
 @EnableWebMvc//允许开启WEB mvc模式
 //扫描基本包路径  spring mvc 自动扫描注解的时候，不去扫描@Service,mvc层只负责扫描@Controller
-@ComponentScan(basePackages = "com.**.controller", useDefaultFilters = false,
-        excludeFilters = {@ComponentScan.Filter(type = FilterType.ANNOTATION, value = {Service.class})
-        }, includeFilters = {@ComponentScan.Filter(type = FilterType.ANNOTATION, value = {Controller.class})})
+@ComponentScan(basePackages = StaticConstant.SPRING_MVC_CONFIG_BASE_PACKAGES,
+        useDefaultFilters = false,
+        excludeFilters = {@ComponentScan.Filter(type = FilterType.ANNOTATION, value = {Service.class})},
+        includeFilters = {@ComponentScan.Filter(type = FilterType.ANNOTATION, value = {Controller.class})}
+)
 //启动Spring MVC的注解功能，完成请求和注解POJO的映射
 public class MVCConfig extends WebMvcConfigurerAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(MVCConfig.class);
@@ -58,8 +61,8 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
         LOGGER.debug("MVC CONFIG 中 7、对模型视图名称的解析，即在模型视图名称添加前后缀……");
         System.out.println("MVC CONFIG 中 7、对模型视图名称的解析，即在模型视图名称添加前后缀……");
         InternalResourceViewResolver internalResourceViewResolver = new InternalResourceViewResolver();
-        internalResourceViewResolver.setPrefix("/WEB-INF/");
-        internalResourceViewResolver.setSuffix("*.jsp");
+        internalResourceViewResolver.setPrefix(StaticConstant.SPRING_MVC_CONFIG_PREFIX);
+        internalResourceViewResolver.setSuffix(StaticConstant.SPRING_MVC_CONFIG_SUFFIX);
         return internalResourceViewResolver;
     }
 
@@ -75,7 +78,7 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
         LOGGER.debug("MVC CONFIG 中 8、设置文件上传管理器……");
         System.out.println("MVC CONFIG 中 8、设置文件上传管理器……");
         CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
-        commonsMultipartResolver.setDefaultEncoding("UTF-8");
+        commonsMultipartResolver.setDefaultEncoding(StaticConstant.WEB_INITIALIZER_CHARACTER_ENCODING);
         commonsMultipartResolver.setMaxUploadSize(10000000L);
         return commonsMultipartResolver;
     }

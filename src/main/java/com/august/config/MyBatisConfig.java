@@ -1,6 +1,7 @@
 package com.august.config;
 
 import com.alibaba.druid.pool.DruidDataSource;
+import com.august.utils.StaticConstant;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
@@ -31,7 +32,7 @@ import java.sql.SQLException;
 //如果使用了JavaConfig的方式启动Spring，
 // 那么即使是ImportResource了XML文件也是无法让MapperScannerConfigurer扫描到的，
 // 必须改为同样的JavaConfig方式,即如下方式
-@MapperScan(basePackages = {"com.**.dao.**.mapper"})//设置mapper扫描基本路径，自动引入实体类
+@MapperScan(basePackages = {StaticConstant.MYBATIS_BASE_PACKAGES})//设置mapper扫描基本路径，自动引入实体类
 @Import(MySQLDataSourceConfig.class)
 public class MyBatisConfig {
     //定义日志记录器
@@ -70,7 +71,7 @@ public class MyBatisConfig {
         //指定数据源
         sqlSessionFactoryBean.setDataSource(druidDataSource);
         ///配置MyBatis实体类基本路径,扫描所有mapper文件
-        sqlSessionFactoryBean.setTypeAliasesPackage("com.**.domain.mybatis");
+        sqlSessionFactoryBean.setTypeAliasesPackage(StaticConstant.MYBATIS_TYPE_ALIASES_PACKAGE);
         return sqlSessionFactoryBean;
     }
 
@@ -86,7 +87,7 @@ public class MyBatisConfig {
         DataSourceInitializer dataSourceInitializer = new DataSourceInitializer();
         dataSourceInitializer.setDataSource(druidDataSource);
         ResourceDatabasePopulator databasePopulator = new ResourceDatabasePopulator();
-        databasePopulator.addScript(new ClassPathResource("db/user.sql"));
+        databasePopulator.addScript(new ClassPathResource(StaticConstant.DATASOURCE_INIT_CLASS_PATH_RESOURCE));
         dataSourceInitializer.setDatabasePopulator(databasePopulator);
         dataSourceInitializer.setEnabled(true);
         return dataSourceInitializer;

@@ -16,6 +16,6 @@ import java.io.Serializable;
  * Update: Administrator(2015/9/18)
  * Description:基本的JPA管理工具类
  */
-@Transactional(transactionManager = "JPA")
+//@Transactional(transactionManager = "JPA")
 public interface BaseRepository<T, ID extends Serializable> extends PagingAndSortingRepository<T, ID> {
 }

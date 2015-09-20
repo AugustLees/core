@@ -3,11 +3,12 @@ package com.august.service;
 import com.august.dao.mapper.UserMapper;
 import com.august.dao.repositories.UserRepository;
 import com.august.domain.hibernate.User;
+import com.august.utils.JPATx;
+import com.august.utils.MyBatisTx;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.PersistenceContext;
 import java.util.List;
 
 /**
@@ -25,6 +26,12 @@ public class UserService {
     @Autowired
     private UserMapper userMapper;
 
+    /**
+     * 利用mybatis管理的事务进行管理
+     *
+     * @return
+     */
+    @MyBatisTx
     public List<User> getUserList() {
 //        List<User> users = (List<User>) userRepository.findAll();
         List<User> users = (List<User>) userMapper.getAllUsers();
@@ -33,6 +40,7 @@ public class UserService {
     }
 
 
+    @JPATx
     public void addUser(User user) {
 //        userMapper.addUser(user);
         userRepository.save(user);

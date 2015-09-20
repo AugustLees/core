@@ -3,6 +3,7 @@ package com.august.config;
 import com.alibaba.druid.support.http.StatViewServlet;
 import com.alibaba.druid.support.http.WebStatFilter;
 import com.august.controller.UserController;
+import com.august.utils.StaticConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.SocketUtils;
@@ -55,7 +56,7 @@ public class WebApplicationInitialized implements WebApplicationInitializer {
 
         //首先创建一个注解配置web引用上下文信息实例，
         AnnotationConfigWebApplicationContext rootContext = new AnnotationConfigWebApplicationContext();
-        rootContext.setDisplayName("测试应用1");
+        rootContext.setDisplayName(StaticConstant.WEB_INITIALIZER_DISPLAY_NAME);
         //实现配置信息的注册，此处为配置全局上下文内容
         rootContext.register(AppConfig.class);
         //容器将传入的一个ServletContext(上下文)放入web应用中,这个WEB项目所有部分都将共享这个上下文
@@ -73,9 +74,11 @@ public class WebApplicationInitialized implements WebApplicationInitializer {
 
         //2、添加Logger4j相关配置
         //首先加载log4j的相关配置文件信息
-        servletContext.setInitParameter("log4jConfigLocation", "classpath:config/log4j.properties");
+        servletContext.setInitParameter(StaticConstant.WEB_INITIALIZER_LOG4J_CONFIG_LOCATION,
+                StaticConstant.WEB_INITIALIZER_LOG4J_CONFIG_LOCATION_PATH);
         //Spring默认刷新Log4j配置文件的间隔,单位为millisecond
-        servletContext.setInitParameter("log4jRefreshInterval", "60000");
+        servletContext.setInitParameter(StaticConstant.WEB_INITIALIZER_LOG4J_REFRESH_INTERVAL,
+                StaticConstant.WEB_INITIALIZER_LOG4J_REFRESH_INTERVAL_TIME);
         //增加log4j的监听器
         servletContext.addListener(Log4jConfigListener.class);
         System.out.println("1.2、添加Logger4j相关配置……");
@@ -100,19 +103,23 @@ public class WebApplicationInitialized implements WebApplicationInitializer {
         //允许强制转换为UTF-8编码
         characterEncodingFilter.setForceEncoding(true);
         //设定初始化字符集编码
-        characterEncodingFilter.setEncoding("UTF-8");
+        characterEncodingFilter.setEncoding(StaticConstant.WEB_INITIALIZER_CHARACTER_ENCODING);
         //将该过滤器添加到servlet上下文中并返回一个动态的过滤器注册机制
-        FilterRegistration.Dynamic encodingFilter = servletContext.addFilter("encodingFilter", characterEncodingFilter);
+        FilterRegistration.Dynamic encodingFilter = servletContext.addFilter(StaticConstant.WEB_INITIALIZER_CHARACTER_ENCODING_FILTER,
+                characterEncodingFilter);
         //对配置好的字符集编码进行URL的映射
-        encodingFilter.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.INCLUDE), false, "/*");
+        encodingFilter.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.INCLUDE), false,
+                StaticConstant.WEB_INITIALIZER_CHARACTER_ENCODING_URL);
 
         System.out.println("2.1、配置字符集过滤器部分……");
 
         //2、启用druidDatasource的web监控功能
         WebStatFilter webStatFilter = new WebStatFilter();
-        webStatFilter.isExclusion("*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*");
-        FilterRegistration.Dynamic druidWebStatFilter = servletContext.addFilter("DruidWebStatFilter", webStatFilter);
-        druidWebStatFilter.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.INCLUDE), false, "/");
+        webStatFilter.isExclusion(StaticConstant.WEB_INITIALIZER_IS_EXCLUSION);
+        FilterRegistration.Dynamic druidWebStatFilter = servletContext.addFilter(StaticConstant.WEB_INITIALIZER_DRUID_WEB_STAT_FILTER,
+                webStatFilter);
+        druidWebStatFilter.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.INCLUDE), false,
+                StaticConstant.WEB_INITIALIZER_DRUID_WEB_STAT_FILTER_URL);
 
         System.out.println("2.2、配置启用druidDatasource的web监控功能过滤器部分……");
 
@@ -142,25 +149,20 @@ public class WebApplicationInitialized implements WebApplicationInitializer {
          */
         //1、配置springMvc的servlet，
         //首先实例化一个dispatcher,并添加到servlet上下文中
-//        AnnotationConfigWebApplicationContext dispatcherContext =
-//                new AnnotationConfigWebApplicationContext();
-//        dispatcherContext.register(MVCConfig.class);
         DispatcherServlet dispatcherServlet = new DispatcherServlet(rootContext);
-        ServletRegistration.Dynamic dispatcher = servletContext.addServlet("dispatcherServlet", dispatcherServlet);
+        ServletRegistration.Dynamic dispatcher = servletContext.addServlet(StaticConstant.WEB_INITIALIZER_SERVLET_NAME,
+                dispatcherServlet);
         //设定加载顺序
         dispatcher.setLoadOnStartup(1);
-//        dispatcher.setInitParameter()
         //设定拦截路径
-        dispatcher.addMapping("/");
+        dispatcher.addMapping(StaticConstant.WEB_INITIALIZER_SERVLET_MAPPING);
         System.out.println("3.1、配置springMvc的servlet……");
 
         //2、启用druidDatasource的web监控功能
-        ServletRegistration.Dynamic dynamic = servletContext.addServlet("druidStatView", new StatViewServlet());
-//        dynamic.setInitParameter("");
-        dynamic.addMapping("/druid/*");
+        ServletRegistration.Dynamic dynamic = servletContext.addServlet(StaticConstant.WEB_INITIALIZER_DRUID_SERVLET_NAME,
+                new StatViewServlet(  ));
+        dynamic.addMapping(StaticConstant.WEB_INITIALIZER_DRUID_SERVLET_MAPPING);
         //访问监控页面：http://ip：port/projectName/druid/index.html
         System.out.println("3.2、配置启用druidDatasource的web监控功能的servlet……");
-
-
     }
 }
