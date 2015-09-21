@@ -13,7 +13,6 @@ import org.springframework.format.support.FormattingConversionServiceFactoryBean
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.scheduling.config.AnnotationDrivenBeanDefinitionParser;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
@@ -21,6 +20,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
@@ -121,39 +121,11 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
     public StringHttpMessageConverter stringHttpMessageConverter() {
         LOGGER.debug("MVC CONFIG 中 6、注入stringHttpMessageConverter组件……");
         System.out.println("MVC CONFIG 中 6、注入stringHttpMessageConverter组件…………");
-        StringHttpMessageConverter stringHttpMessageConverter = new StringHttpMessageConverter();
-        stringHttpMessageConverter.setSupportedMediaTypes(Arrays.asList(MediaType.TEXT_HTML, MediaType.TEXT_PLAIN));
+        StringHttpMessageConverter stringHttpMessageConverter = new StringHttpMessageConverter(Charset.forName("UTF-8"));
+        stringHttpMessageConverter.setWriteAcceptCharset(Charset.isSupported("UTF-8"));
+        stringHttpMessageConverter.setSupportedMediaTypes(Arrays.asList(
+                MediaType.TEXT_HTML,
+                MediaType.TEXT_PLAIN));
         return stringHttpMessageConverter;
     }
-
-//    @Bean
-//    public AnnotationDrivenBeanDefinitionParser annotationDrivenBeanDefinitionParser() {
-//        LOGGER.debug("MVC CONFIG 中 5、开启MVC注解驱动……");
-//        System.out.println("MVC CONFIG 中 5、开启MVC注解驱动…………");
-//        AnnotationDrivenBeanDefinitionParser annotationDrivenBeanDefinitionParser = new AnnotationDrivenBeanDefinitionParser();
-//        return annotationDrivenBeanDefinitionParser;
-//    }
-//
-//    //RequestMappingHandlerAdapter需要显示声明，否则不能注册通用属性编辑器
-//    @Bean
-//    public RequestMappingHandlerAdapter requestMappingHandlerAdapter() {
-//        RequestMappingHandlerAdapter requestMappingHandlerAdapter = new RequestMappingHandlerAdapter();
-//        requestMappingHandlerAdapter.setMessageConverters(Arrays.<HttpMessageConverter<?>>asList(mappingJackson2HttpMessageConverter()));
-//        return requestMappingHandlerAdapter;
-//    }
-//
-//    /**
-//     * 会自动注册RequestMappingHandlerMapping与RequestMappingHandlerAdapter
-//     * 两个bean,是spring MVC为@Controllers分发请求所必须的。
-//     * 并提供了：数据绑定支持，@NumberFormatannotation支持，
-//     * 和@DateTimeFormat 支持，@Valid支持，读写XML的支持（JAXB），读写JSON的支持（Jackson）
-//     *
-//     * @return
-//     */
-//    @Bean
-//    public RequestMappingHandlerMapping requestMappingHandlerMapping() {
-//        LOGGER.debug("MVC CONFIG 中 RequestMappingHandlerMapping");
-//        //RequestMappingHandlerMapping需要显示声明，否则不能注册自定义的拦截器>
-//        return new RequestMappingHandlerMapping();
-//    }
 }

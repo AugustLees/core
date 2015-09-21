@@ -1,6 +1,7 @@
 package com.august.dao.mapper;
 
 import com.august.domain.hibernate.User;
+import com.august.utils.MyBatisTx;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
@@ -19,7 +20,6 @@ import java.util.List;
  * Description:基于mybatis管理的数据库操作接口
  */
 @Repository(value = "userMapper")
-@Transactional(transactionManager = "myBatis")
 public interface UserMapper {
     @Insert("insert into user(name,email,password,birthday) values(#{name},#{email},#{password},#{birthday})")
     void addUser(User user);

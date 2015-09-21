@@ -26,8 +26,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    //加了@ResponseBody注解后，return的数据如何解析就是这个属性配置的Converter负责的
     @ResponseBody
-    @RequestMapping(value = "getUserList")
+    @RequestMapping(value = "/getUserList")
     public List<User> getUserList() {
         LOGGER.debug("===========================================》接收请求");
         List<User> users = this.userService.getUserList();
@@ -35,11 +36,11 @@ public class UserController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "addUser")
-    public String addUser() {
-        LOGGER.debug("===========================================》接收请求");
+    @RequestMapping(value = "/addUser")
+    public String addUser(String name) {
+        LOGGER.debug("===========================================》添加员工信息接收请求");
         User user = new User();
-        user.setName("测试员工1" + new Date().getTime());
+        user.setName(name + new Date().getTime());
         user.setEmail("邮件地址");
         user.setBirthday(new Date());
         user.setPassword("密码测试");

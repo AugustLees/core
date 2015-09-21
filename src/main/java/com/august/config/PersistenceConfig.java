@@ -2,7 +2,6 @@ package com.august.config;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.august.utils.StaticConstant;
-import org.hibernate.ejb.HibernatePersistence;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,8 +24,6 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.annotation.Resource;
-import javax.persistence.PersistenceUnit;
-import javax.transaction.Transactional;
 import java.util.Properties;
 
 /**
@@ -42,7 +39,9 @@ import java.util.Properties;
 @EnableTransactionManagement(proxyTargetClass = true)
 //启用Jpa配置
 //配置jpa扫描基本实现类,即数据库操作层相关实现
-@EnableJpaRepositories(basePackages = StaticConstant.JPA_BASE_PACKAGES)
+@EnableJpaRepositories(transactionManagerRef = "jpaTransactionManager",
+        entityManagerFactoryRef = "jpaEntityManagerFactory",
+        basePackages = StaticConstant.JPA_BASE_PACKAGES)
 @Import(DataSourceConfig.class)
 public class PersistenceConfig {
     //定义日志记录器
@@ -106,9 +105,8 @@ public class PersistenceConfig {
      *
      * @return
      */
-    @Bean(name = "entityManagerFactory")
-    @PersistenceUnit(unitName="JPAEntityManagerFactory")
-    public LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean() {
+    @Bean(name = "jpaEntityManagerFactory")
+    public LocalContainerEntityManagerFactoryBean jpaEntityManagerFactory() {
         LOGGER.debug("PersistenceConfig 中 1、配置 EntityManagerFactory……");
         System.out.println("PersistenceConfig 中 1、配置 EntityManagerFactory……");
         LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
@@ -156,7 +154,7 @@ public class PersistenceConfig {
         System.out.println("PersistenceConfig 中 5、配置 JPA 使用的事务管理器 transactionManager……");
         JpaTransactionManager jpaTransactionManager = new JpaTransactionManager();
         jpaTransactionManager.setDataSource(druidDataSource);
-        jpaTransactionManager.setEntityManagerFactory(localContainerEntityManagerFactoryBean().getObject());
+        jpaTransactionManager.setEntityManagerFactory(jpaEntityManagerFactory().getObject());
         return jpaTransactionManager;
     }
 
@@ -172,6 +170,42 @@ public class PersistenceConfig {
         dataSourceInitializer.setEnabled(Boolean.parseBoolean(initDatabase));
         return dataSourceInitializer;
     }
+
+
+
+//    @Autowired
+//    private JpaProperties jpaProperties;
+//
+//    @Autowired
+//    @Qualifier("primaryDS")
+//    private DataSource primaryDS;
+//
+//    @Bean(name = "entityManagerPrimary")
+//    @Primary
+//    public EntityManager entityManager(EntityManagerFactoryBuilder builder) {
+//        return entityManagerFactoryPrimary(builder).getObject().createEntityManager();
+//    }
+//
+//    @Bean(name = "entityManagerFactoryPrimary")
+//    @Primary
+//    public LocalContainerEntityManagerFactoryBean entityManagerFactoryPrimary (EntityManagerFactoryBuilder builder) {
+//        return builder
+//                .dataSource(primaryDS)
+//                .properties(getVendorProperties(primaryDS))
+//                .packages("com.wisely.demo.domain.one") //设置实体类所在位置
+//                .persistenceUnit("primaryPersistenceUnit")
+//                .build();
+//    }
+//
+//    private Map<String, String> getVendorProperties(DataSource dataSource) {
+//        return jpaProperties.getHibernateProperties(dataSource);
+//    }
+//
+//    @Bean(name = "transactionManagerPrimary")
+//    @Primary
+//    PlatformTransactionManager transactionManagerPrimary(EntityManagerFactoryBuilder builder) {
+//        return new JpaTransactionManager(entityManagerFactoryPrimary(builder).getObject());
+//    }
 
 }
 

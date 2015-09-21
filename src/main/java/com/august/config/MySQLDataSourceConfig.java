@@ -3,6 +3,7 @@ package com.august.config;
 import com.alibaba.druid.pool.DruidDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -78,6 +79,7 @@ public class MySQLDataSourceConfig {
      * @throws SQLException
      */
     @Bean(name = "mySqlDruidDataSource", initMethod = "init", destroyMethod = "close")
+    @Qualifier("mySqlDruidDataSource")
     public DataSource druidDataSource() throws SQLException {
         System.out.println("MySQLDataSourceConfig 中 1、初始化数据源……");
         LOGGER.debug("MySQLDataSourceConfig 中 1、初始化数据源……");

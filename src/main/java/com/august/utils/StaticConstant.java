@@ -53,6 +53,8 @@ public class StaticConstant {
     //定义web应用初始化DRUID_SERVLET的映射路径
     public static final String WEB_INITIALIZER_DRUID_SERVLET_MAPPING = "/druid/*";
 
+    //定义web应用下返回信息交给responseBody管理时的字符编码
+    public static final String CHARSET = ";charset=" + WEB_INITIALIZER_CHARACTER_ENCODING;
 
     //定义WEB应用中shiro过滤器的名称
     public static final String WEB_INITIALIZER_SHIRO_FILTER = "shiroDelegatingFilterProxy";
@@ -102,7 +104,6 @@ public class StaticConstant {
 
     //定义MybatisConfig中所指定的实体类文件的路径
     public static final String JPA_PACKAGES_TO_SCAN = "com.august.**.domain.**";
-
 
 
 }

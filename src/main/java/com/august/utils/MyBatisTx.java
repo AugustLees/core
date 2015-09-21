@@ -17,6 +17,6 @@ import java.lang.annotation.Target;
  */
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@Transactional(transactionManager = "myBatis")
+@Transactional(transactionManager = "myBatisTransactionManager")
 public @interface MyBatisTx {
 }

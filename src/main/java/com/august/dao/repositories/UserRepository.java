@@ -1,11 +1,11 @@
 package com.august.dao.repositories;
 
-import com.august.dao.mapper.BaseRepository;
 import com.august.domain.hibernate.User;
+import com.august.utils.JPATx;
 import org.springframework.data.repository.PagingAndSortingRepository;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceUnit;
 
 /**
  * PROJECT_NAME: core

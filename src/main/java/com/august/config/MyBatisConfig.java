@@ -39,6 +39,7 @@ public class MyBatisConfig {
     private static final Logger LOGGER = LoggerFactory.getLogger(MyBatisConfig.class);
 
     @Resource(name = "mySqlDruidDataSource")
+    @Qualifier("mySqlDruidDataSource")
     private DruidDataSource druidDataSource;
 
     /**
@@ -48,7 +49,7 @@ public class MyBatisConfig {
      * @throws SQLException
      */
     @Bean(name = "myBatisTransactionManager")
-    @Qualifier(value = "myBatis")
+//    @Qualifier(value = "myBatis")
     public DataSourceTransactionManager datasourcetransactionManager() throws SQLException {
         System.out.println("MyBatisConfig 中 1、 配置事务管理器……");
         LOGGER.debug("MyBatisConfig 中 1、 配置事务管理器……");
