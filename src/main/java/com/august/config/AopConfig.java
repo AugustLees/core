@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
+import java.util.Arrays;
+
 /**
  * PROJECT_NAME: core
  * PACKAGE_NAME: com.august.config
@@ -17,6 +19,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
  * Update: August(2015/8/23)
  * Description:创建//加入AspectJ的动态代理（非必需）
  * http://my.oschina.net/u/1998885/blog/483884?p={{totalPage}}
+ * http://my.oschina.net/itblog/blog/211693
  */
 @Configuration//表示该类是一个配置文件 //标注此类为配置类（必有）
 //加入AspectJ的动态代理，替换掉下面的注释部分的注入
@@ -52,13 +55,18 @@ public class AopConfig {
      */
     @Before(value = "myMethod()")
     public void before(JoinPoint joinPoint) {
+        System.out.println("@Before：模拟权限检查...");
+        System.out.println("@Before：目标方法为：" +
+                joinPoint.getSignature().getDeclaringTypeName() +
+                "." + joinPoint.getSignature().getName());
+        System.out.println("@Before：参数为：" + Arrays.toString(joinPoint.getArgs()));
+        System.out.println("@Before：被织入的目标对象为：" + joinPoint.getTarget());
+
         System.out.println("-----beforeAdvice().invoke-----");
         System.out.println(" 此处意在执行核心业务逻辑前，做一些安全性的判断等等");
         System.out.println(" 可通过joinPoint来获取所需要的内容");
         System.out.println("-----End of beforeAdvice()------");
-        if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("before " + joinPoint);
-        }
+        LOGGER.info("before {}", joinPoint);
     }
 
 
@@ -70,13 +78,20 @@ public class AopConfig {
      */
     @After(value = "myMethod()")
     public void after(JoinPoint joinPoint) {
-        System.out.println("-----afterAdvice().invoke-----");
-        System.out.println(" 此处意在执行核心业务逻辑之后，做一些日志记录操作等等");
-        System.out.println(" 可通过joinPoint来获取所需要的内容");
-        System.out.println("-----End of afterAdvice()------");
-        if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("after " + joinPoint);
-        }
+
+        System.out.println("@After：模拟释放资源...");
+        System.out.println("@After：目标方法为：" +
+                joinPoint.getSignature().getDeclaringTypeName() +
+                "." + joinPoint.getSignature().getName());
+        System.out.println("@After：参数为：" + Arrays.toString(joinPoint.getArgs()));
+        System.out.println("@After：被织入的目标对象为：" + joinPoint.getTarget());
+//
+//
+//        System.out.println("-----afterAdvice().invoke-----");
+//        System.out.println(" 此处意在执行核心业务逻辑之后，做一些日志记录操作等等");
+//        System.out.println(" 可通过joinPoint来获取所需要的内容");
+//        System.out.println("-----End of afterAdvice()------");
+//        LOGGER.info("after {}", joinPoint);
     }
 
 
@@ -90,34 +105,48 @@ public class AopConfig {
      * @param joinPoint
      */
     @Around(value = "myMethod()")
-    public Object around(JoinPoint joinPoint) {
-        System.out.println("-----aroundAdvice().invoke-----");
-        System.out.println(" 此处可以做类似于Before Advice的事情");
+    public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
 
-        //调用核心逻辑
-        //…………
-        System.out.println(" 此处可以做类似于After Advice的事情");
-        System.out.println("-----End of aroundAdvice()------");
-        long start = System.currentTimeMillis();
-        Object result = null;
-        try {
-            result = ((ProceedingJoinPoint) joinPoint).proceed();
-            System.out.println();
-            if (result instanceof User) {
-                System.out.println(result);
-            }
-            LOGGER.info("consuming {}s", System.currentTimeMillis() - start);
-            long end = System.currentTimeMillis();
-            if (LOGGER.isInfoEnabled()) {
-                LOGGER.info("around " + joinPoint + "\tUse time : " + (end - start) + " ms!");
-            }
-        } catch (Throwable e) {
-            long end = System.currentTimeMillis();
-            if (LOGGER.isInfoEnabled()) {
-                LOGGER.info("around " + joinPoint + "\tUse time : " + (end - start) + " ms with exception : " + e.getMessage());
-            }
+        System.out.println("@Around：执行目标方法之前...");
+        //访问目标方法的参数：
+        Object[] args = joinPoint.getArgs();
+        if (args != null && args.length > 0 && args[0].getClass() == String.class) {
+            args[0] = "改变后的参数1";
         }
-        return result;
+        //用改变后的参数执行目标方法
+        Object returnValue = joinPoint.proceed(args);
+        System.out.println("@Around：执行目标方法之后...");
+        System.out.println("@Around：被织入的目标对象为：" + joinPoint.getTarget());
+        return "原返回值：" + returnValue + "，这是返回结果的后缀";
+
+
+//        System.out.println("-----aroundAdvice().invoke-----");
+//        System.out.println(" 此处可以做类似于Before Advice的事情");
+//
+//        //调用核心逻辑
+//        //…………
+//        System.out.println(" 此处可以做类似于After Advice的事情");
+//        System.out.println("-----End of aroundAdvice()------");
+//        long start = System.currentTimeMillis();
+//        Object result = null;
+//        try {
+//            result = ((ProceedingJoinPoint) joinPoint).proceed();
+//            System.out.println();
+//            if (result instanceof User) {
+//                System.out.println(result);
+//            }
+//            LOGGER.info("consuming {}s", System.currentTimeMillis() - start);
+//            long end = System.currentTimeMillis();
+//            if (LOGGER.isInfoEnabled()) {
+//                LOGGER.info("around " + joinPoint + "\tUse time : " + (end - start) + " ms!");
+//            }
+//        } catch (Throwable e) {
+//            long end = System.currentTimeMillis();
+//            if (LOGGER.isInfoEnabled()) {
+//                LOGGER.info("around " + joinPoint + "\tUse time : " + (end - start) + " ms with exception : " + e.getMessage());
+//            }
+//        }
+//        return result;
     }
 
     /**
@@ -126,21 +155,30 @@ public class AopConfig {
      */
     @AfterReturning(value = "myMethod()", returning = "result")
     public void afterReturn(JoinPoint joinPoint, Object result) {
-        Object[] objects = joinPoint.getArgs();
-        for (Object o : objects) {
-            System.out.println(o);
-            User user = (User) o;
-            user.setName("f=后置通知");
-        }
-        System.out.println(result);
-        System.out.println("========checkSecurity==" + joinPoint.getSignature().getName());//这个是获得方法名
-        System.out.println("-----afterReturningAdvice().invoke-----");
-        System.out.println(" 此处可以对返回值做进一步处理");
-        System.out.println(" 可通过joinPoint来获取所需要的内容");
-        System.out.println("-----End of afterReturningAdvice()------");
-        if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("afterReturn " + joinPoint);
-        }
+        System.out.println("@AfterReturning：模拟日志记录功能...");
+        System.out.println("@AfterReturning：目标方法为：" +
+                joinPoint.getSignature().getDeclaringTypeName() +
+                "." + joinPoint.getSignature().getName());
+        System.out.println("@AfterReturning：参数为：" +
+                Arrays.toString(joinPoint.getArgs()));
+        System.out.println("@AfterReturning：返回值为：" + result);
+        System.out.println("@AfterReturning：被织入的目标对象为：" + joinPoint.getTarget());
+
+//        Object[] objects = joinPoint.getArgs();
+//        for (Object o : objects) {
+//            System.out.println(o);
+//            User user = (User) o;
+//            user.setName("f=后置通知");
+//        }
+//        System.out.println(result);
+//        System.out.println("========checkSecurity==" + joinPoint.getSignature().getName());//这个是获得方法名
+//        System.out.println("-----afterReturningAdvice().invoke-----");
+//        System.out.println(" 此处可以对返回值做进一步处理");
+//        System.out.println(" 可通过joinPoint来获取所需要的内容");
+//        System.out.println("-----End of afterReturningAdvice()------");
+//        if (LOGGER.isInfoEnabled()) {
+//            LOGGER.info("afterReturn " + joinPoint);
+//        }
     }
 
     /**

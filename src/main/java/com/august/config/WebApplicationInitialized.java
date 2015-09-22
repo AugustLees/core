@@ -164,5 +164,7 @@ public class WebApplicationInitialized implements WebApplicationInitializer {
         dynamic.addMapping(StaticConstant.WEB_INITIALIZER_DRUID_SERVLET_MAPPING);
         //访问监控页面：http://ip：port/projectName/druid/index.html
         System.out.println("3.2、配置启用druidDatasource的web监控功能的servlet……");
+
+
     }
 }

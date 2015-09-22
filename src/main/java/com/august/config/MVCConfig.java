@@ -83,20 +83,14 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
         return commonsMultipartResolver;
     }
 
-    @Bean//定义全局日期格式
-    public SimpleDateFormat simpleDateFormat() {
-        LOGGER.debug("MVC CONFIG 中 4、定义全局日期格式……");
-        System.out.println("MVC CONFIG 中 4、定义全局日期格式……");
-        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    }
-
     @Bean
     public ObjectMapper objectMapper() {
         LOGGER.debug("MVC CONFIG 中 3、将时间格式器注入到mapper对象中……");
         System.out.println("MVC CONFIG 中 3、将时间格式器注入到mapper对象中……");
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        objectMapper.setDateFormat(simpleDateFormat());
+        //n//定义全局日期格式
+        objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
         return objectMapper;
     }
 
@@ -111,7 +105,8 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
         LOGGER.debug("MVC CONFIG 中 2、注入MappingJackson2HttpMessageConverter组件避免出现下载现象……");
         System.out.println("MVC CONFIG 中 2、注入MappingJackson2HttpMessageConverter组件避免出现下载现象…………");
         MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
-        mappingJackson2HttpMessageConverter.setPrefixJson(true);
+        mappingJackson2HttpMessageConverter.setPrettyPrint(true);
+//        mappingJackson2HttpMessageConverter.setPrefixJson(true);
         mappingJackson2HttpMessageConverter.setObjectMapper(objectMapper());
         mappingJackson2HttpMessageConverter.setSupportedMediaTypes(Arrays.asList(MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED));
         return mappingJackson2HttpMessageConverter;

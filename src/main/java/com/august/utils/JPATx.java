@@ -17,6 +17,7 @@ import java.lang.annotation.Target;
  */
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
+//声明使用事务，不声明spring会使用默认事务管理
 @Transactional(transactionManager = "JPA")
 public @interface JPATx {
 }
