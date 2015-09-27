@@ -2,11 +2,9 @@ package com.august.config;
 
 import com.alibaba.druid.support.http.StatViewServlet;
 import com.alibaba.druid.support.http.WebStatFilter;
-import com.august.controller.UserController;
 import com.august.utils.StaticConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.SocketUtils;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
@@ -83,7 +81,7 @@ public class WebApplicationInitialized implements WebApplicationInitializer {
         servletContext.addListener(Log4jConfigListener.class);
         System.out.println("1.2、添加Logger4j相关配置……");
 
-        //3、主要负责处理由JavaBean introspector使用而引起的缓冲泄露
+        //3、主要负责处理由JavaBean Introspector使用而引起的缓冲泄露
         //创建一个防止内存溢出的监听器
         IntrospectorCleanupListener introspectorCleanupListener = new IntrospectorCleanupListener();
         //将监听器添加到上下文中

@@ -14,24 +14,14 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "user")
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+public class User extends BaseDomain {
+
     private String name;
     @Column(nullable = false, unique = true)
     private String email;
     @Column(nullable = false)
     private String password;
     private Date birthday;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
