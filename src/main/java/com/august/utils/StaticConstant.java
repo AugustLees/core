@@ -105,5 +105,7 @@ public class StaticConstant {
     //定义MybatisConfig中所指定的实体类文件的路径
     public static final String JPA_PACKAGES_TO_SCAN = "com.august.**.domain.**";
 
+    //任务调度信息中集合名称，用于获取任务信息
+    public static final String SCHEDULE_JOB_NAME = "scheduleJob";
 
 }

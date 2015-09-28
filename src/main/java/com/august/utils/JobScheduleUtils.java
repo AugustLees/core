@@ -44,7 +44,7 @@ public class JobScheduleUtils {
         }
         //保证实例化信息存在
         if (object == null) {
-            LOGGER.error("任务名称 = [" + scheduleJob.getJobName() + "]---------------未启动成功，请检查是否配置正确！！！");
+            LOGGER.error("任务名称 = [{}]---------------未启动成功，请检查是否配置正确！！！", scheduleJob.getJobName());
         }
 
         //获取类对象信息
@@ -55,7 +55,7 @@ public class JobScheduleUtils {
             method = clazz.getDeclaredMethod(scheduleJob.getMethodName());
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
-            LOGGER.error("任务名称 = [" + scheduleJob.getJobName() + "]---------------未启动成功，方法名设置错误！！！");
+            LOGGER.error("任务名称 = [{}]---------------未启动成功，方法名设置错误！！！", scheduleJob.getJobName());
         }
         //如果方法信息存在则进行反射
         if (method != null) {
@@ -67,6 +67,6 @@ public class JobScheduleUtils {
                 e.printStackTrace();
             }
         }
-        System.out.println("任务名称 = [" + scheduleJob.getJobName() + "]----------启动成功");
+        LOGGER.info("任务名称 = [{}]----------启动成功", scheduleJob.getJobName());
     }
 }

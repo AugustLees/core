@@ -15,7 +15,7 @@ import org.quartz.JobExecutionException;
 public class QuartzSchedulerFactory implements Job {
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-        JobSchedule jobSchedule = (JobSchedule) jobExecutionContext.getMergedJobDataMap().get("scheduleJob");
+        JobSchedule jobSchedule = (JobSchedule) jobExecutionContext.getMergedJobDataMap().get(StaticConstant.SCHEDULE_JOB_NAME);
         JobScheduleUtils.invokeMethod(jobSchedule);
     }
 }

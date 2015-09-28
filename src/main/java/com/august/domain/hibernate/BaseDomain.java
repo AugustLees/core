@@ -1,9 +1,6 @@
 package com.august.domain.hibernate;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -11,9 +8,10 @@ import java.util.Date;
  * PACKAGE_NAME: com.august.domain.hibernate
  * Author: August
  * Update: August(2015/9/25)
- * Description:用于定义基本的数据库操作信息
+ * Description:用于定义基本的数据库操作基本信息
  */
-
+// JPA基类标识
+@MappedSuperclass
 public class BaseDomain {
     /**
      * ID信息
@@ -27,7 +25,7 @@ public class BaseDomain {
     /**
      * 创建日期
      */
-    @Column(name = "create_time", nullable = false)
+    @Column(name = "create_time", nullable = false, insertable = true, updatable = false)
     private Date createTime;
 
 
@@ -46,7 +44,7 @@ public class BaseDomain {
     /**
      * 创建人信息
      */
-    @Column(name = "creator", nullable = false)
+    @Column(name = "creator", nullable = false, insertable = true, updatable = false)
     private String creator;
 
     /**

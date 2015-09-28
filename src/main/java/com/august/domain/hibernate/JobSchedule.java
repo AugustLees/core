@@ -3,6 +3,9 @@ package com.august.domain.hibernate;
 import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import java.util.Date;
 
 /**
@@ -13,7 +16,9 @@ import java.util.Date;
  * Description:任务调度信息管理类
  * 用于定义任务调度信息
  */
-public class JobSchedule extends BaseDomain{
+@Entity
+@Table(name = "", uniqueConstraints = {@UniqueConstraint(columnNames = {"job_name", "job_group"})})
+public class JobSchedule extends BaseDomain {
     //可运行状态
     public static final String STATUS_RUNNING = "1";
     //非运行状态
@@ -26,7 +31,7 @@ public class JobSchedule extends BaseDomain{
     /**
      * 任务名称
      */
-    @Column(name = "job_name",nullable = false)
+    @Column(name = "job_name", nullable = false)
     private String jobName;
 
     /**
@@ -44,7 +49,7 @@ public class JobSchedule extends BaseDomain{
     /**
      * 任务cron表达式
      */
-    @Column(name = "cron_expression",nullable = false)
+    @Column(name = "cron_expression", nullable = false)
     private String cronExpression;
 
     /**
@@ -69,13 +74,13 @@ public class JobSchedule extends BaseDomain{
      * 任务执行时调用哪个类的方法，
      * 此处的写法是包名+类名
      */
-    @Column(name = "bean_class",nullable = false)
+    @Column(name = "bean_class", nullable = false)
     private String beanClass;
 
     /**
      * 任务调用的方法名
      */
-    @Column(name = "method_name",nullable = false)
+    @Column(name = "method_name", nullable = false)
     private String methodName;
 
 
