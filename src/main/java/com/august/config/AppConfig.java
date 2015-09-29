@@ -26,7 +26,7 @@ import org.springframework.stereotype.Controller;
 )
 //引入配置信息
 //引入相关程序的配置文件
-@Import({MVCConfig.class, JavaMailConfig.class,/* AopConfig.class,*/MyBatisConfig.class, PersistenceConfig.class})
+@Import({MVCConfig.class, JavaMailConfig.class,/* AopConfig.class,*/MyBatisConfig.class, PersistenceConfig.class, SchedulerConfig.class})
 //加载资源文件
 @PropertySource(value = StaticConstant.APPLICATION_CONFIG_PROPERTY_SOURCE)
 public class AppConfig {

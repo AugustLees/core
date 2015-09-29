@@ -1,4 +1,4 @@
-package com.august.domain.hibernate;
+package com.august.domain;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -26,6 +26,7 @@ public class BaseDomain {
      * 创建日期
      */
     @Column(name = "create_time", nullable = false, insertable = true, updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date createTime;
 
 
@@ -33,18 +34,20 @@ public class BaseDomain {
      * 修改日期
      */
     @Column(name = "update_time")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date updateTime;
 
     /**
      * 删除日期
      */
     @Column(name = "delete_time")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date deleteTime;
 
     /**
      * 创建人信息
      */
-    @Column(name = "creator", nullable = false, insertable = true, updatable = false)
+    @Column(name = "creator", nullable = false, insertable = false, updatable = false)
     private String creator;
 
     /**

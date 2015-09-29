@@ -1,12 +1,11 @@
 package com.august.domain.hibernate;
 
-import org.springframework.jdbc.datasource.init.DataSourceInitializer;
+import com.august.domain.BaseDomain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import java.util.Date;
 
 /**
  * PROJECT_NAME: core

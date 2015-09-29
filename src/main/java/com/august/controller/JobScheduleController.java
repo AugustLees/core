@@ -43,11 +43,18 @@ public class JobScheduleController {
      * @param request 请求信息
      * @return 响应结果
      */
+//    @RequestMapping("/jobScheduleList")
+//    public String jobScheduleList(HttpServletRequest request) {
+//        List<JobSchedule> jobScheduleList = jobScheduleService.getJobScheduleList(new JobSchedule());
+//        request.setAttribute("jobScheduleList", jobScheduleList);
+//        return "base/task/taskList";
+//    }
+
     @RequestMapping("/jobScheduleList")
-    public String jobScheduleList(HttpServletRequest request) {
+    @ResponseBody
+    public List<JobSchedule> jobScheduleList(HttpServletRequest request) {
         List<JobSchedule> jobScheduleList = jobScheduleService.getJobScheduleList(new JobSchedule());
-        request.setAttribute("jobScheduleList", jobScheduleList);
-        return "base/task/taskList";
+        return jobScheduleList;
     }
 
     /**

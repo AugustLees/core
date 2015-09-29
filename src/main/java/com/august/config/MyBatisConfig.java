@@ -32,7 +32,7 @@ import java.sql.SQLException;
 //如果使用了JavaConfig的方式启动Spring，
 // 那么即使是ImportResource了XML文件也是无法让MapperScannerConfigurer扫描到的，
 // 必须改为同样的JavaConfig方式,即如下方式
-@MapperScan(basePackages = {StaticConstant.MYBATIS_BASE_PACKAGES})//设置mapper扫描基本路径，自动引入实体类
+@MapperScan(basePackages = {StaticConstant.MYBATIS_BASE_PACKAGES})//设置mapper扫描基本路径，自动引入mapper信息
 @Import(MySQLDataSourceConfig.class)
 public class MyBatisConfig {
     //定义日志记录器

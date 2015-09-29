@@ -1,5 +1,6 @@
 package com.august.domain.hibernate;
 
+import com.august.domain.BaseDomain;
 import org.hibernate.dialect.Ingres10Dialect;
 
 import javax.persistence.*;

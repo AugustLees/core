@@ -53,7 +53,7 @@ public class PersistenceConfig {
     String hibernate_show_sql;
     @Value("${hibernateFormat_sql:true}")
     String hibernate_format_sql;
-    @Value("${hibernateHbm2ddlAuto:create}")
+    @Value("${hibernateHbm2ddlAuto:update}")
     String hibernate_hbm2ddl_auto;
 
     @Value("${init-db:false}")
