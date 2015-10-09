@@ -35,6 +35,8 @@ public class AppConfig {
     /**
      * 实例化资源文件解析bean
      * 这个类必须有，而且必须声明为static，否则不能正常解析
+     * spring启动时扫描项目路径下的properties文件,后续用${key }方式取出对应值,这样可以代码解耦和，后续只需修改properties文件即可
+     * 等同于@PropertySource
      *
      * @return
      */
@@ -42,7 +44,9 @@ public class AppConfig {
     public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
         LOGGER.debug("AppConfig中PropertySourcesPlaceholderConfigurer initializer……");
         System.out.println("AppConfig中PropertySourcesPlaceholderConfigurer initializer……");
-        return new PropertySourcesPlaceholderConfigurer();
+        PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer = new PropertySourcesPlaceholderConfigurer();
+//        propertySourcesPlaceholderConfigurer.setLocation(new pr);
+        return propertySourcesPlaceholderConfigurer;
     }
 
 }

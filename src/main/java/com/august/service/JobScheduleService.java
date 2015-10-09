@@ -11,6 +11,10 @@ import org.quartz.impl.matchers.GroupMatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,6 +22,7 @@ import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -50,6 +55,47 @@ public class JobScheduleService {
      */
     public List<JobSchedule> getJobScheduleList(JobSchedule jobSchedule) {
         return (List<JobSchedule>) jobScheduleRepository.findAll();
+    }
+
+    /**
+     * 根据一个分页对象查询JobSchedule集合（还可以添加一个Store排序属性）
+     * PageRequest    是spring自己封装的请求分页类，实现了Pageable接口，包涵从请求中获得的分页属性（当前页和大小）和获取方法
+     * 通过调用分页方法，返回一个Page<>一个泛型集合的分页对象，里面包涵了通过查询计算出的各个属性和结果集
+     * 详细类结构和属性请参阅源码
+     *
+     * @param jobSchedule 需要查询的参数集合
+     * @param pageRequest 分页信息
+     * @return 查询到的带有分页的任务信息列表
+     */
+    public Page<JobSchedule> getJobScheduleList(JobSchedule jobSchedule, PageRequest pageRequest) {
+        Specification<JobSchedule> specification = buildSpecification(jobSchedule);
+        return  jobScheduleRepository.findAll(specification, pageRequest);
+    }
+
+    /**
+     * 动态创建条件查询参数请求
+     * 创建动态查询条件组合.
+     * @param jobSchedule
+     * @return
+     */
+    private Specification<JobSchedule> buildSpecification(JobSchedule jobSchedule) {
+//        Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
+//        filters.put("user.id", new SearchFilter("user.id", Operator.EQ, userId));
+//        Specification<Task> spec = DynamicSpecifications.bySearchFilter(filters.values(), Task.class);
+//        return spec;
+        return new Specification<JobSchedule>() {
+                @Override
+                public Predicate toPredicate(Root<JobSchedule> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                    Path<String> namePath = root.get("name");
+                    Path<String> nicknamePath = root.get("nickname");
+                    /**
+                     * 连接查询条件, 不定参数，可以连接0..N个查询条件
+                     */
+                    criteriaQuery.where(criteriaBuilder.like(namePath, "%李%"), criteriaBuilder.like(nicknamePath, "%王%")); //这里可以设置任意条查询条件
+
+                    return null;
+                }
+            };
     }
 
     /**

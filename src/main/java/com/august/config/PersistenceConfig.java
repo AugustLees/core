@@ -171,42 +171,6 @@ public class PersistenceConfig {
         return dataSourceInitializer;
     }
 
-
-
-//    @Autowired
-//    private JpaProperties jpaProperties;
-//
-//    @Autowired
-//    @Qualifier("primaryDS")
-//    private DataSource primaryDS;
-//
-//    @Bean(name = "entityManagerPrimary")
-//    @Primary
-//    public EntityManager entityManager(EntityManagerFactoryBuilder builder) {
-//        return entityManagerFactoryPrimary(builder).getObject().createEntityManager();
-//    }
-//
-//    @Bean(name = "entityManagerFactoryPrimary")
-//    @Primary
-//    public LocalContainerEntityManagerFactoryBean entityManagerFactoryPrimary (EntityManagerFactoryBuilder builder) {
-//        return builder
-//                .dataSource(primaryDS)
-//                .properties(getVendorProperties(primaryDS))
-//                .packages("com.wisely.demo.domain.one") //设置实体类所在位置
-//                .persistenceUnit("primaryPersistenceUnit")
-//                .build();
-//    }
-//
-//    private Map<String, String> getVendorProperties(DataSource dataSource) {
-//        return jpaProperties.getHibernateProperties(dataSource);
-//    }
-//
-//    @Bean(name = "transactionManagerPrimary")
-//    @Primary
-//    PlatformTransactionManager transactionManagerPrimary(EntityManagerFactoryBuilder builder) {
-//        return new JpaTransactionManager(entityManagerFactoryPrimary(builder).getObject());
-//    }
-
 }
 
 

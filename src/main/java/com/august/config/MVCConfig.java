@@ -19,6 +19,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import org.springframework.web.servlet.view.JstlView;
 
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
@@ -63,6 +64,7 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
         InternalResourceViewResolver internalResourceViewResolver = new InternalResourceViewResolver();
         internalResourceViewResolver.setPrefix(StaticConstant.SPRING_MVC_CONFIG_PREFIX);
         internalResourceViewResolver.setSuffix(StaticConstant.SPRING_MVC_CONFIG_SUFFIX);
+        internalResourceViewResolver.setViewClass(JstlView.class);
         return internalResourceViewResolver;
     }
 

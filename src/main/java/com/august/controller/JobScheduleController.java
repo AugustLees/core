@@ -10,6 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +20,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
-import java.util.List;
 
 /**
  * PROJECT_NAME: core
@@ -39,22 +41,27 @@ public class JobScheduleController {
 
     /**
      * 任务调度列表查询
+     * 查询分页对象
      *
      * @param request 请求信息
      * @return 响应结果
      */
-//    @RequestMapping("/jobScheduleList")
-//    public String jobScheduleList(HttpServletRequest request) {
-//        List<JobSchedule> jobScheduleList = jobScheduleService.getJobScheduleList(new JobSchedule());
-//        request.setAttribute("jobScheduleList", jobScheduleList);
-//        return "base/task/taskList";
-//    }
-
     @RequestMapping("/jobScheduleList")
     @ResponseBody
-    public List<JobSchedule> jobScheduleList(HttpServletRequest request) {
-        List<JobSchedule> jobScheduleList = jobScheduleService.getJobScheduleList(new JobSchedule());
-        return jobScheduleList;
+    public Page<JobSchedule> jobScheduleList(HttpServletRequest request) {
+        /**
+         *  创建一个分页对象   （注意：0代表的是第一页，5代表每页的大小,后两个参数不写即为默认排序）
+         *  Direction：为一个枚举类，定义了DESC和ASC排序顺序
+         *  id：结果集根据id来进行DESC降序排序
+         *  想自己实现的话，最好继承他这个类，来定义一些个性的方法
+         */
+        PageRequest pageRequest = new PageRequest(0, 5, Sort.Direction.DESC, "id");
+        Page<JobSchedule>  jobSchedulePage = jobScheduleService.getJobScheduleList(new JobSchedule(), pageRequest);
+        // 打印分页详情
+        System.out.println("查询结果：共"+jobSchedulePage.getTotalElements()+"条数据，每页显示"+jobSchedulePage.getSize()+"条，共"+jobSchedulePage.getTotalPages()+"页，当前第"+(jobSchedulePage.getNumber()+1)+"页！");
+        // 打印结果集的内容
+        System.out.println(jobSchedulePage.getContent());
+        return jobSchedulePage;
     }
 
     /**
