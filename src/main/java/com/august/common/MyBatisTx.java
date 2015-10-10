@@ -1,4 +1,4 @@
-package com.august.utils;
+package com.august.common;
 
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,12 +12,11 @@ import java.lang.annotation.Target;
  * PACKAGE_NAME: com.august.utils
  * Author: August
  * Update: August(2015/9/19)
- * Description:配置JPA管理的事务控制器
- * 当有@JPATx注解时，会自动注入该事务
+ * Description:配置Mybatis管理的事务控制器
+ * 当以@MybatisTxt注入时，自动启用mybatis事务控制器
  */
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-//声明使用事务，不声明spring会使用默认事务管理
-@Transactional(transactionManager = "JPA")
-public @interface JPATx {
+@Transactional(transactionManager = "myBatisTransactionManager")
+public @interface MyBatisTx {
 }

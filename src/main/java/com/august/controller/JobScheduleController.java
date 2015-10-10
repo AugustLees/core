@@ -3,7 +3,7 @@ package com.august.controller;
 import com.august.common.RetObj;
 import com.august.domain.hibernate.JobSchedule;
 import com.august.service.JobScheduleService;
-import com.august.utils.SpringUtils;
+import com.august.common.SpringUtils;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.SchedulerException;
 import org.slf4j.Logger;
@@ -56,7 +56,10 @@ public class JobScheduleController {
          *  想自己实现的话，最好继承他这个类，来定义一些个性的方法
          */
         PageRequest pageRequest = new PageRequest(0, 5, Sort.Direction.DESC, "id");
-        Page<JobSchedule>  jobSchedulePage = jobScheduleService.getJobScheduleList(new JobSchedule(), pageRequest);
+        JobSchedule jobSchedule=new JobSchedule();
+        jobSchedule.setJobName("测试任务一");
+        jobSchedule.setJobGroup("测试任务zu一");
+        Page<JobSchedule>  jobSchedulePage = jobScheduleService.getJobScheduleList(jobSchedule, pageRequest);
         // 打印分页详情
         System.out.println("查询结果：共"+jobSchedulePage.getTotalElements()+"条数据，每页显示"+jobSchedulePage.getSize()+"条，共"+jobSchedulePage.getTotalPages()+"页，当前第"+(jobSchedulePage.getNumber()+1)+"页！");
         // 打印结果集的内容

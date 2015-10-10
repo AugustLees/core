@@ -1,6 +1,6 @@
 package com.august.config;
 
-import com.august.utils.SpringUtils;
+import com.august.common.SpringUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;

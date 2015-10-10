@@ -1,4 +1,4 @@
-package com.august.utils;
+package com.august.common;
 
 import com.august.domain.hibernate.JobSchedule;
 import org.slf4j.Logger;

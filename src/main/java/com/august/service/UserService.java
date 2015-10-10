@@ -3,8 +3,8 @@ package com.august.service;
 import com.august.dao.mapper.UserMapper;
 import com.august.dao.repositories.UserRepository;
 import com.august.domain.hibernate.User;
-import com.august.utils.JPATx;
-import com.august.utils.MyBatisTx;
+import com.august.common.JPATx;
+import com.august.common.MyBatisTx;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

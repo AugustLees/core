@@ -1,13 +1,11 @@
 package com.august.dao.mapper;
 
 import com.august.domain.hibernate.User;
-import com.august.utils.MyBatisTx;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;

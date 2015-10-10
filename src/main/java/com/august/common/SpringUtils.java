@@ -1,4 +1,4 @@
-package com.august.utils;
+package com.august.common;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
