@@ -18,17 +18,17 @@ import java.util.List;
  * Description: 定义一个查询条件容器
  */
 public class Criteria<T> implements Specification<T> {
-    private List<Criterion> criterions = new ArrayList<Criterion>();
+    private List<Criterion> criterionList = new ArrayList<Criterion>();
 
     @Override
     public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query,
                                  CriteriaBuilder builder) {
 
 
-        if (!criterions.isEmpty()) {
+        if (!criterionList.isEmpty()) {
             List<Predicate> predicates = new ArrayList<Predicate>();
-            for (Criterion c : criterions) {
-                predicates.add(c.toPredicate(root, query, builder));
+            for (Criterion criterion : criterionList) {
+                predicates.add(criterion.toPredicate(root, query, builder));
             }
             // 将所有条件用 and 联合起来
             if (predicates.size() > 0) {
@@ -43,7 +43,7 @@ public class Criteria<T> implements Specification<T> {
      */
     public void add(Criterion criterion) {
         if (criterion != null) {
-            criterions.add(criterion);
+            criterionList.add(criterion);
         }
     }
 }

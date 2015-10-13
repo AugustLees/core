@@ -3,8 +3,10 @@ package com.august.service;
 import com.august.common.JPATx;
 import com.august.common.QuartzJobFactoryDisallowConcurrentExecution;
 import com.august.common.QuartzSchedulerFactory;
+import com.august.common.Restrictions;
 import com.august.dao.repositories.JobScheduleRepository;
 import com.august.domain.hibernate.JobSchedule;
+import com.august.utils.Criteria;
 import com.august.utils.StaticConstant;
 import org.quartz.*;
 import org.quartz.impl.matchers.GroupMatcher;
@@ -16,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.criteria.*;
@@ -64,19 +67,19 @@ public class JobScheduleService {
      * @return 查询到的带有分页的任务信息列表
      */
     public Page<JobSchedule> getJobScheduleList(JobSchedule jobSchedule, PageRequest pageRequest) {
-        Specification<JobSchedule> specification = buildSpecification(jobSchedule);
-        return jobScheduleRepository.findAll(specification, pageRequest);
-//        Criteria<JobSchedule> c = new Criteria<JobSchedule>();
-//        c.add(Restrictions.like("jobGroup", jobSchedule.getJobGroup(), true));
-//        c.add(Restrictions.like("jobName", jobSchedule.getJobName(), false));
-//        c.add(Restrictions.eq("jobStatus", jobSchedule.getJobStatus(), true));
-////        c.add(Restrictions.eq("createUser.userName", jobSchedule.get, true));
-////        c.add(Restrictions.lte("submitTime", jobSchedule.getStartSubmitTime(), true));
-////        c.add(Restrictions.gte("submitTime", jobSchedule.getEndSubmitTime(), true));
-////        c.add(Restrictions.eq("needFollow", jobSchedule.getIsfollow(), true));
-////        c.add(Restrictions.ne("flowStatus", CaseConstants.CASE_STATUS_DRAFT, true));
-////        c.add(Restrictions.in("solveTeam.code",teamCodes, true));
-//        return jobScheduleRepository.findAll(c, pageRequest);
+//        Specification<JobSchedule> specification = buildSpecification(jobSchedule);
+//        return jobScheduleRepository.findAll(specification, pageRequest);
+        Criteria<JobSchedule> criteria = new Criteria<JobSchedule>();
+        criteria.add(Restrictions.like("jobGroup", jobSchedule.getJobGroup(), true));
+        criteria.add(Restrictions.like("jobName", jobSchedule.getJobName(), false));
+        criteria.add(Restrictions.eq("jobStatus", jobSchedule.getJobStatus(), true));
+//        criteria.add(Restrictions.eq("createUser.userName", jobSchedule.get, true));
+//        criteria.add(Restrictions.lte("submitTime", jobSchedule.getStartSubmitTime(), true));
+//        criteria.add(Restrictions.gte("submitTime", jobSchedule.getEndSubmitTime(), true));
+//        criteria.add(Restrictions.eq("needFollow", jobSchedule.getIsfollow(), true));
+//        criteria.add(Restrictions.ne("flowStatus", CaseConstants.CASE_STATUS_DRAFT, true));
+//        criteria.add(Restrictions.in("solveTeam.code",teamCodes, true));
+        return jobScheduleRepository.findAll(criteria, pageRequest);
     }
 
     /**
@@ -87,34 +90,22 @@ public class JobScheduleService {
      * @return
      */
     private Specification<JobSchedule> buildSpecification(final JobSchedule jobSchedule) {
-//        Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
-//        filters.put("user.id", new SearchFilter("user.id", Operator.EQ, userId));
-//        Specification<JobSchedule> spec = DynamicSpecifications.bySearchFilter(filters.values(), JobSchedule.class);
-//        return spec;
         return new Specification<JobSchedule>() {
             @Override
             public Predicate toPredicate(Root<JobSchedule> root,
-                                         CriteriaQuery<?> query, CriteriaBuilder builder) {
-
-                //path转化
-                List<Predicate> orPredicates = Lists.newArrayList();
-
-                Path<String> idPath = root.get("channel").get("id");
-                Path<String> parentIdsPath = root.get("channel").get("parentIds");
-
-                Predicate p1 = builder.equal(root.get("channel").get("id"), channelId);
-                orPredicates.add(builder.or(p1));
-                Predicate p2 = builder.like((Path) root.get("channel").get("parentIds"), "%," + channelId + ",%");
-                orPredicates.add(builder.or(p2));
-
-                //以下是springside3提供的方法
-                Predicate o = DynamicSpecifications.bySearchFilter(filters, JobSchedule.class).toPredicate(root, query, builder);
-
-                Predicate p = builder.or(orPredicates.toArray(new Predicate[orPredicates.size()]));
-                query.where(p, o);
-
-                return null;
-
+                                         CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+                Predicate predicate = criteriaBuilder.conjunction();
+                List<Expression<Boolean>> expressions = predicate.getExpressions();
+                if (!StringUtils.isEmpty(jobSchedule.getJobGroup())) {
+                    expressions.add(criteriaBuilder.like(root.<String>get("jobGroup"), "%" + jobSchedule.getJobGroup() + "%")); //任务组
+                }
+                if (!StringUtils.isEmpty(jobSchedule.getJobName())) {
+                    expressions.add(criteriaBuilder.like(root.<String>get("jobName"), "%" + jobSchedule.getJobName() + "%"));//任务名
+                }
+                if (!StringUtils.isEmpty(jobSchedule.getJobStatus())) {
+                    expressions.add(criteriaBuilder.equal(root.<String>get("jobStatus"), jobSchedule.getJobStatus()));    //任务状态
+                }
+                return predicate;
             }
         };
     }

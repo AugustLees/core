@@ -18,10 +18,10 @@ public class Restrictions {
     /**
      * 等于
      *
-     * @param fieldName
-     * @param value
-     * @param ignoreNull
-     * @return
+     * @param fieldName  匹配字段
+     * @param value      匹配值
+     * @param ignoreNull 是否忽略空
+     * @return 拼接完成的字符串
      */
     public static SimpleExpression eq(String fieldName, Object value, boolean ignoreNull) {
         if (StringUtils.isEmpty(value)) return null;
@@ -31,10 +31,10 @@ public class Restrictions {
     /**
      * 不等于
      *
-     * @param fieldName
-     * @param value
-     * @param ignoreNull
-     * @return
+     * @param fieldName  匹配字段
+     * @param value      匹配值
+     * @param ignoreNull 是否忽略空
+     * @return 拼接完成的字符串
      */
     public static SimpleExpression ne(String fieldName, Object value, boolean ignoreNull) {
         if (StringUtils.isEmpty(value)) return null;
@@ -44,10 +44,10 @@ public class Restrictions {
     /**
      * 模糊匹配
      *
-     * @param fieldName
-     * @param value
-     * @param ignoreNull
-     * @return
+     * @param fieldName  匹配字段
+     * @param value      匹配值
+     * @param ignoreNull 是否忽略空
+     * @return 拼接完成的字符串
      */
     public static SimpleExpression like(String fieldName, String value, boolean ignoreNull) {
         if (StringUtils.isEmpty(value)) return null;
@@ -55,11 +55,11 @@ public class Restrictions {
     }
 
     /**
-     * @param fieldName
-     * @param value
-     * @param matchMode
-     * @param ignoreNull
-     * @return
+     * @param fieldName  匹配字段
+     * @param value      匹配值
+     * @param matchMode  匹配模式
+     * @param ignoreNull 是否忽略空
+     * @return 拼接完成的字符串
      */
     public static SimpleExpression like(String fieldName, String value,
                                         MatchMode matchMode, boolean ignoreNull) {
@@ -70,10 +70,10 @@ public class Restrictions {
     /**
      * 大于
      *
-     * @param fieldName
-     * @param value
-     * @param ignoreNull
-     * @return
+     * @param fieldName  匹配字段
+     * @param value      匹配值
+     * @param ignoreNull 是否忽略空
+     * @return 拼接完成的字符串
      */
     public static SimpleExpression gt(String fieldName, Object value, boolean ignoreNull) {
         if (StringUtils.isEmpty(value)) return null;
@@ -83,10 +83,10 @@ public class Restrictions {
     /**
      * 小于
      *
-     * @param fieldName
-     * @param value
-     * @param ignoreNull
-     * @return
+     * @param fieldName  匹配字段
+     * @param value      匹配值
+     * @param ignoreNull 是否忽略空
+     * @return 拼接完成的字符串
      */
     public static SimpleExpression lt(String fieldName, Object value, boolean ignoreNull) {
         if (StringUtils.isEmpty(value)) return null;
@@ -96,10 +96,10 @@ public class Restrictions {
     /**
      * 大于等于
      *
-     * @param fieldName
-     * @param value
-     * @param ignoreNull
-     * @return
+     * @param fieldName  匹配字段
+     * @param value      匹配值
+     * @param ignoreNull 是否忽略空
+     * @return 拼接完成的字符串
      */
     public static SimpleExpression lte(String fieldName, Object value, boolean ignoreNull) {
         if (StringUtils.isEmpty(value)) return null;
@@ -109,9 +109,9 @@ public class Restrictions {
     /**
      * 小于等于
      *
-     * @param fieldName
-     * @param value
-     * @param ignoreNull
+     * @param fieldName  匹配字段
+     * @param value      匹配值
+     * @param ignoreNull 是否忽略空
      * @return
      */
     public static SimpleExpression gte(String fieldName, Object value, boolean ignoreNull) {
@@ -144,8 +144,9 @@ public class Restrictions {
     /**
      * 包含于
      *
-     * @param fieldName
-     * @param value
+     * @param fieldName  匹配字段
+     * @param value      匹配值
+     * @param ignoreNull 是否忽略空
      * @return
      */
     @SuppressWarnings("rawtypes")
