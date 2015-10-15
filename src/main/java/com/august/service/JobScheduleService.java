@@ -3,10 +3,11 @@ package com.august.service;
 import com.august.common.JPATx;
 import com.august.common.QuartzJobFactoryDisallowConcurrentExecution;
 import com.august.common.QuartzSchedulerFactory;
-import com.august.common.Restrictions;
 import com.august.dao.repositories.JobScheduleRepository;
 import com.august.domain.hibernate.JobSchedule;
-import com.august.utils.Criteria;
+import com.august.service.util.Criteria;
+import com.august.service.util.Criterion;
+import com.august.service.util.SimpleExpression;
 import com.august.utils.StaticConstant;
 import org.quartz.*;
 import org.quartz.impl.matchers.GroupMatcher;
@@ -67,18 +68,25 @@ public class JobScheduleService {
      * @return 查询到的带有分页的任务信息列表
      */
     public Page<JobSchedule> getJobScheduleList(JobSchedule jobSchedule, PageRequest pageRequest) {
-//        Specification<JobSchedule> specification = buildSpecification(jobSchedule);
-//        return jobScheduleRepository.findAll(specification, pageRequest);
+////        Specification<JobSchedule> specification = buildSpecification(jobSchedule);
+////        return jobScheduleRepository.findAll(specification, pageRequest);
+//        Criteria<JobSchedule> criteria = new Criteria<JobSchedule>();
+//        criteria.add(Restrictions.like("jobGroup", jobSchedule.getJobGroup(), true));
+//        criteria.add(Restrictions.like("jobName", jobSchedule.getJobName(), false));
+////        criteria.add(Restrictions.eq("jobStatus", jobSchedule.getJobStatus(), true));
+////        criteria.add(Restrictions.eq("createUser.userName", jobSchedule.get, true));
+////        criteria.add(Restrictions.lte("submitTime", jobSchedule.getStartSubmitTime(), true));
+////        criteria.add(Restrictions.gte("submitTime", jobSchedule.getEndSubmitTime(), true));
+////        criteria.add(Restrictions.eq("needFollow", jobSchedule.getIsfollow(), true));
+////        criteria.add(Restrictions.ne("flowStatus", CaseConstants.CASE_STATUS_DRAFT, true));
+////        criteria.add(Restrictions.in("solveTeam.code",teamCodes, true));
+//        return jobScheduleRepository.findAll(criteria, pageRequest);
+//
+        //生成约束条件
         Criteria<JobSchedule> criteria = new Criteria<JobSchedule>();
-        criteria.add(Restrictions.like("jobGroup", jobSchedule.getJobGroup(), true));
-        criteria.add(Restrictions.like("jobName", jobSchedule.getJobName(), false));
-        criteria.add(Restrictions.eq("jobStatus", jobSchedule.getJobStatus(), true));
-//        criteria.add(Restrictions.eq("createUser.userName", jobSchedule.get, true));
-//        criteria.add(Restrictions.lte("submitTime", jobSchedule.getStartSubmitTime(), true));
-//        criteria.add(Restrictions.gte("submitTime", jobSchedule.getEndSubmitTime(), true));
-//        criteria.add(Restrictions.eq("needFollow", jobSchedule.getIsfollow(), true));
-//        criteria.add(Restrictions.ne("flowStatus", CaseConstants.CASE_STATUS_DRAFT, true));
-//        criteria.add(Restrictions.in("solveTeam.code",teamCodes, true));
+        criteria.add(new SimpleExpression("jobGroup", jobSchedule.getJobGroup(), true, Criterion.Operator.LIKE));
+
+        //带条件查询且带分页的数据查找
         return jobScheduleRepository.findAll(criteria, pageRequest);
     }
 

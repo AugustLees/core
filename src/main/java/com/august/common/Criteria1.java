@@ -1,6 +1,6 @@
-package com.august.utils;
+package com.august.common;
 
-import com.august.common.Criterion;
+import com.august.service.util.Criterion;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -17,7 +17,7 @@ import java.util.List;
  * Update: Administrator(2015/10/10)
  * Description: 定义一个查询条件容器
  */
-public class Criteria<T> implements Specification<T> {
+public class Criteria1<T> implements Specification<T> {
     private List<Criterion> criterionList = new ArrayList<Criterion>();
 
     @Override
