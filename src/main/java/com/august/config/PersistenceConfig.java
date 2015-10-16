@@ -35,7 +35,7 @@ import java.util.Properties;
  * 该配置是基于JPA的数据库配置
  */
 @Configuration
-//启用注解事务管理，使用CGLib代理
+//启用注解事务管理，使用代理
 @EnableTransactionManagement(proxyTargetClass = true)
 //启用Jpa配置
 //配置jpa扫描基本实现类,即数据库操作层相关实现
@@ -170,6 +170,50 @@ public class PersistenceConfig {
         dataSourceInitializer.setEnabled(Boolean.parseBoolean(initDatabase));
         return dataSourceInitializer;
     }
+
+
+
+    /**
+     * 相当于XML信息中如下配置
+     * <import resource="classpath:config/context/applicationContext-DataSourceConfig.xml" />
+
+
+     <bean id="sessionFactory"
+     class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+     <property name="dataSource" ref="dataSource" />
+     <property name="packagesToScan">
+     <list>
+     <value>web.function.**.model.oracle</value>
+     </list>
+     </property>
+     <property name="hibernateProperties">
+     <props>
+     <prop key="hibernate.dialect">
+     ${hibernate.dialect}
+     </prop>
+     <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+     <prop key="hibernate.current_session_context_class">org.springframework.orm.hibernate4.SpringSessionContext</prop>
+     </props>
+     </property>
+     </bean>
+
+
+     <!-- hibernateDAO -->
+     <bean id="hibernateDAO" class="web.dao.hibernate.impl.CP_Hibernate4DAOImpl">
+     <property name="sessionFactory" ref="sessionFactory"></property>
+     </bean>
+
+
+
+
+     <bean id="transactionManager"
+     class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+     <property name="sessionFactory" ref="sessionFactory" />
+     </bean>
+
+     <!-- 启用事务注解功能 -->
+     <tx:annotation-driven transaction-manager="transactionManager" />
+     */
 
 }
 

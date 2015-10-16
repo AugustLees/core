@@ -125,4 +125,38 @@ public class DataSourceConfig {
         System.out.println("DataSourceConfig 中 1、初始化SQLSessionFactory数据源……结束");
         return druidDataSource;
     }
+
+
+    /**
+     * 相当于XML中文件信息如下：
+     * <!-- 数据源配置, 使用 BoneCP 数据库连接池 -->
+     * <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+     * <!-- 数据源驱动类可不写，Druid默认会自动根据URL识别DriverClass -->
+     * <property name="driverClassName" value="${driverClassName}" />
+     * <!-- 基本属性 url、user、password -->
+     * <property name="url" value="${driverClassName}" />
+     * <property name="username" value="${username}" />
+     * <property name="password" value="${password}" />
+     * <!-- 配置初始化大小、最小、最大 -->
+     * <property name="initialSize" value="${initialSize}" />
+     * <property name="minIdle" value="${minIdle}" />
+     * <property name="maxActive" value="${maxActive}" />
+     * <!-- 配置获取连接等待超时的时间 -->
+     * <property name="maxWait" value="${maxWait}" />
+     * <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+     * <property name="timeBetweenEvictionRunsMillis" value="${timeBetweenEvictionRunsMillis}" />
+     * <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+     * <property name="minEvictableIdleTimeMillis" value="${minEvictableIdleTimeMillis}" />
+     * <property name="validationQuery" value="${validationQuery}" />
+     * <property name="testWhileIdle" value="true" />
+     * <property name="testOnBorrow" value="false" />
+     * <property name="testOnReturn" value="false" />
+     * <!-- 打开PSCache，并且指定每个连接上PSCache的大小（Oracle使用） -->
+     * <!--
+     * <property name="poolPreparedStatements" value="true" />
+     * <property name="maxPoolPreparedStatementPerConnectionSize" value="20" /> -->
+     * <!-- 配置监控统计拦截的filters -->
+     * <property name="filters" value="mergeStat,log4j,wall" />
+     * </bean>
+     */
 }

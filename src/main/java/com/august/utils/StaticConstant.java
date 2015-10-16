@@ -108,4 +108,8 @@ public class StaticConstant {
     //任务调度信息中集合名称，用于获取任务信息
     public static final String SCHEDULE_JOB_NAME = "scheduleJob";
 
+    //SPRING_MVC中配置国际化资源缓存时间
+    public static final int SPRING_MVC_CONFIG_CACHE_SECONDS = 60;
+    //SPRING_MVC配置文件中国际化资源基本名称
+    public static final String SPRING_MVC_CONFIG_BASE_NAMES = "config.messages";
 }

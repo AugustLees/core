@@ -19,6 +19,6 @@ public interface JobScheduleRepository extends BaseRepository<JobSchedule, Long>
     @Query("UPDATE JobSchedule  SET cronExpression =:cron WHERE id =:id")
     void updateCron(@Param("id") Long id, @Param("cron") String cron);
 
-    @Query("select * from JobSchedule WHERE exc =:exc and cronExpression =:cron ")
-    void select(@Param("exc") Long exc, @Param("cron") String cron);
+    @Query("select job from JobSchedule job WHERE job.id =:id and job.cronExpression =:cron ")
+    void select(@Param("id") Long id, @Param("cron") String cron);
 }

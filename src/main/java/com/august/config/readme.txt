@@ -19,3 +19,15 @@
 解决方案：
 二、当前框架存在的问题
 1、返回信息中文存在乱码
+
+
+
+spring4中提供了大量的注解来支持零配置，简要说明如下：
+@Configuration ： 类似于spring配置文件，负责注册bean，对应的提供了@Bean注解。
+        需要org.springframework.web.context.support.AnnotationConfigWebApplicationContext注册到容器中。
+@ComponentScan ： 注解类查找规则定义 <context:component-scan/>
+@EnableAspectJAutoProxy ： 激活Aspect自动代理 <aop:aspectj-autoproxy/>
+@Import @ImportResource: 关联其它spring配置  <import resource="" />
+@EnableCaching ：启用缓存注解  <cache:annotation-driven/>
+@EnableTransactionManagement ： 启用注解式事务管理 <tx:annotation-driven />
+@EnableWebMvcSecurity ： 启用springSecurity安全验证
