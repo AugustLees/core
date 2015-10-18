@@ -10,6 +10,9 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.format.FormatterRegistrar;
+import org.springframework.format.datetime.DateFormatter;
+import org.springframework.format.datetime.standard.DateTimeFormatterRegistrar;
 import org.springframework.format.support.FormattingConversionServiceFactoryBean;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.StringHttpMessageConverter;
@@ -18,13 +21,19 @@ import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.i18n.CookieLocaleResolver;
+import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * PROJECT_NAME: core
@@ -50,7 +59,31 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
     public FormattingConversionServiceFactoryBean formattingConversionServiceFactoryBean() {
         LOGGER.debug("MVC CONFIG  中 1、注册日期格式转换服务器……");
         System.out.println("MVC CONFIG  中 1、注册日期格式转换服务器……");
-        return new FormattingConversionServiceFactoryBean();
+        FormattingConversionServiceFactoryBean formattingConversionServiceFactoryBean = new FormattingConversionServiceFactoryBean();
+        //关闭默认转换器
+        formattingConversionServiceFactoryBean.setRegisterDefaultFormatters(false);
+        //增加格式转换注册器列表
+        Set<FormatterRegistrar> formatterRegistrars = new HashSet<FormatterRegistrar>();
+        formatterRegistrars.add()
+        formattingConversionServiceFactoryBean.setFormatterRegistrars(formatterRegistrars);
+        return formattingConversionServiceFactoryBean;
+    }
+
+    public DateTimeFormatterRegistrar dateTimeFormatterRegistrar() {
+        DateTimeFormatterRegistrar dateTimeFormatterRegistrar = new DateTimeFormatterRegistrar();
+        dateTimeFormatterRegistrar.setDateTimeFormatter(dateFormatter());
+        return dateTimeFormatterRegistrar;
+    }
+
+    /**
+     * 创建日期格式转换器
+     *
+     * @return
+     */
+    public DateTimeFormatter dateFormatter() {
+        DateFormatter dateFormatter = new DateFormatter();
+        dateFormatter.setPattern("yyyy-MM-dd HH:mm:ss");
+        return dateFormatter;
     }
 
     /**
@@ -71,7 +104,7 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
 
 
     /**
-     * 配置国际化资源文件信息
+     * 定义国际化资源文件查找规则 ，各种messages.properties
      *
      * @return
      */
@@ -141,6 +174,52 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
                 MediaType.TEXT_PLAIN));
         return stringHttpMessageConverter;
     }
+
+    /**
+     * 如果项目的一些资源文件放在/WEB-INF/resources/下面
+     * 在浏览器访问的地址就是类似：http://host:port/projectName/WEB-INF/resources/xxx.css
+     * 但是加了如下定义之后就可以这样访问：
+     * http://host:port/projectName/resources/xxx.css
+     * 非必须
+     */
+    @Override
+    public void addResourceHandlers(final ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/resources/**/*").addResourceLocations("/WEB-INF/resources/");
+    }
+
+    /**
+     * 本地化拦截器
+     *
+     * @return
+     */
+    @Bean
+    public LocaleChangeInterceptor localeChangeInterceptor() {
+        LOGGER.debug("MVCConfig 中 本地化拦截器 LocaleChangeInterceptor");
+        return new LocaleChangeInterceptor();
+    }
+
+    /**
+     * 基于cookie的本地化资源处理器
+     *
+     * @return
+     */
+    @Bean(name = "localeResolver")
+    public CookieLocaleResolver cookieLocaleResolver() {
+        LOGGER.debug("MVCConfig 中 基于cookie的本地化资源处理器 CookieLocaleResolver");
+        return new CookieLocaleResolver();
+    }
+
+    /**
+     * 添加拦截器
+     *
+     * @param registry 拦截器注册表
+     */
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        LOGGER.debug("MVCConfig 中 添加拦截器 addInterceptors start");
+        registry.addInterceptor(localeChangeInterceptor());
+        LOGGER.debug("MVCConfig 中 添加拦截器 addInterceptors end");
+    }
 }
 
 /**
@@ -165,16 +244,16 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
  * <property name="defaultEncoding" value="UTF-8"/>
  * <property name="cacheSeconds" value="60"/>
  * </bean>
- * <p/>
+ * <p>
  * <!-- servlet适配器，这里必须明确声明，因为spring默认没有初始化该适配器 -->
  * <bean id="servletHandlerAdapter"
  * class="org.springframework.web.servlet.handler.SimpleServletHandlerAdapter" />
- * <p/>
+ * <p>
  * <!-- 定义文件上传处理器 -->
  * <bean id="multipartResolver"
  * class="org.springframework.web.multipart.commons.CommonsMultipartResolver"
  * p:defaultEncoding="UTF-8" />
- * <p/>
+ * <p>
  * <!-- 异常处理器 -->
  * <bean id="exceptionResolver" class="web.core.CP_SimpleMappingExceptionResolver">
  * <property name="defaultErrorView" value="common_error" />
@@ -185,32 +264,32 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
  * </props>
  * </property>
  * </bean>
- * <p/>
- * <p/>
+ * <p>
+ * <p>
  * <!-- 定义公共参数初始化拦截器 -->
  * <bean id="initInterceptor" class="web.core.CP_InitializingInterceptor" />
- * <p/>
- * <p/>
- * <p/>
- * <p/>
+ * <p>
+ * <p>
+ * <p>
+ * <p>
  * <!-- 本地化资源处理器 -->
  * <bean id="localeResolver"
  * class="org.springframework.web.servlet.i18n.CookieLocaleResolver" />
- * <p/>
+ * <p>
  * <!-- 定义本地化变更拦截器 -->
  * <bean id="localeChangeInterceptor"
  * class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor" />
- * <p/>
- * <p/>
+ * <p>
+ * <p>
  * <!-- 请求拦截器，每一个用户请求都会被拦截 -->
  * <mvc:interceptors>
  * <ref bean="localeChangeInterceptor" />
  * <ref bean="initInterceptor" />
  * </mvc:interceptors>
- * <p/>
- * <p/>
- * <p/>
- * <p/>
+ * <p>
+ * <p>
+ * <p>
+ * <p>
  * <!-- 定义注解驱动Controller方法处理适配器 ,注：该适配器必须声明在<mvc:annotation-driven />之前，否则不能正常处理参数类型的转换 -->
  * <bean
  * class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
@@ -228,13 +307,13 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
  * </list>
  * </property>
  * </bean>
- * <p/>
- * <p/>
+ * <p>
+ * <p>
  * <!-- 会自动注册RequestMappingHandlerMapping与RequestMappingHandlerAdapter
  * 两个bean,是spring MVC为@Controllers分发请求所必须的。 并提供了：数据绑定支持，@NumberFormatannotation支持，@DateTimeFormat支持，@Valid支持，读写XML的支持（JAXB），读写JSON的支持（Jackson） -->
  * <mvc:annotation-driven />
- * <p/>
- * <p/>
+ * <p>
+ * <p>
  * <!-- 资源访问处理器 -->
  * <mvc:resources mapping="/static/**" location="/WEB-INF/static/" />
  */
