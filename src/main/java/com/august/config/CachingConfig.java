@@ -1,5 +1,6 @@
 package com.august.config;
 
+import com.august.utils.StaticConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.CacheManager;
@@ -32,7 +33,7 @@ public class CachingConfig {
     public EhCacheManagerFactoryBean ehCacheManagerFactoryBean() {
         LOGGER.debug("CachingConfig 中 cacheManager工厂类，指定ehcache.xml的位置……");
         EhCacheManagerFactoryBean ehCacheManagerFactoryBean = new EhCacheManagerFactoryBean();
-        ehCacheManagerFactoryBean.setConfigLocation(new ClassPathResource("config/ehcache.xml"));
+        ehCacheManagerFactoryBean.setConfigLocation(new ClassPathResource(StaticConstant.CACHING_CONFIG_CLASSPATH));
         return ehCacheManagerFactoryBean;
     }
 

@@ -32,8 +32,8 @@ public class UserService {
      */
     @MyBatisTx
     public List<User> getUserList() {
-        List<User> users = (List<User>) userRepository.findAll();
-//        List<User> users = (List<User>) userMapper.getAllUsers();
+//        List<User> users = (List<User>) userRepository.findAll();
+        List<User> users = (List<User>) userMapper.getAllUsers();
         System.out.println(users.size());
         return users;
     }

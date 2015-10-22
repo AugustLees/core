@@ -1,5 +1,6 @@
 package com.august.controller;
 
+import com.august.common.Response;
 import com.august.domain.hibernate.User;
 import com.august.service.UserService;
 import org.slf4j.Logger;
@@ -26,18 +27,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    //加了@ResponseBody注解后，return的数据如何解析就是这个属性配置的Converter负责的
-    @ResponseBody
-    @RequestMapping(value = "/getUserList")
-    public List<User> getUserList() {
-        LOGGER.debug("===========================================》接收请求");
-        List<User> users = this.userService.getUserList();
-        return users;
-    }
-
-    @ResponseBody
+//    @ResponseBody
     @RequestMapping(value = "/addUser")
-    public String addUser(String name) {
+    public Response addUser(String name) {
         LOGGER.debug("===========================================》添加员工信息接收请求");
         User user = new User();
         user.setName(name + new Date().getTime());
@@ -45,7 +37,19 @@ public class UserController {
         user.setBirthday(new Date());
         user.setPassword("密码测试");
         userService.addUser(user);
-        return "添加成功";
+        Response response=new Response();
+        response.setIsSuccess(true);
+        response.setReason("添加成功!");
+        return response;
+    }
+
+    //加了@ResponseBody注解后，return的数据如何解析就是这个属性配置的Converter负责的
+    @ResponseBody
+    @RequestMapping(value = "/getUserList")
+    public List<User> getUserList() {
+        LOGGER.debug("===========================================》接收请求");
+        List<User> users = this.userService.getUserList();
+        return users;
     }
 
 }

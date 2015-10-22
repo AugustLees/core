@@ -12,6 +12,7 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.format.FormatterRegistrar;
 import org.springframework.format.datetime.DateFormatter;
+import org.springframework.format.datetime.DateFormatterRegistrar;
 import org.springframework.format.datetime.standard.DateTimeFormatterRegistrar;
 import org.springframework.format.support.FormattingConversionServiceFactoryBean;
 import org.springframework.http.MediaType;
@@ -64,15 +65,22 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
         formattingConversionServiceFactoryBean.setRegisterDefaultFormatters(false);
         //增加格式转换注册器列表
         Set<FormatterRegistrar> formatterRegistrars = new HashSet<FormatterRegistrar>();
-        formatterRegistrars.add()
+        formatterRegistrars.add(dateFormatterRegistrar());
         formattingConversionServiceFactoryBean.setFormatterRegistrars(formatterRegistrars);
         return formattingConversionServiceFactoryBean;
     }
 
-    public DateTimeFormatterRegistrar dateTimeFormatterRegistrar() {
-        DateTimeFormatterRegistrar dateTimeFormatterRegistrar = new DateTimeFormatterRegistrar();
-        dateTimeFormatterRegistrar.setDateTimeFormatter(dateFormatter());
-        return dateTimeFormatterRegistrar;
+    /**
+     * 创建日期格式注册机
+     *
+     * @return
+     */
+    public DateFormatterRegistrar dateFormatterRegistrar() {
+        LOGGER.debug("MVC CONFIG  中 90、注册日期格式转换服务器……");
+        System.out.println("MVC CONFIG  中 90、注册日期格式转换服务器……");
+        DateFormatterRegistrar dateFormatterRegistrar = new DateFormatterRegistrar();
+        dateFormatterRegistrar.setFormatter(dateFormatter());
+        return dateFormatterRegistrar;
     }
 
     /**
@@ -80,7 +88,9 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
      *
      * @return
      */
-    public DateTimeFormatter dateFormatter() {
+    public DateFormatter dateFormatter() {
+        LOGGER.debug("MVC CONFIG  中 89、注册日期格式转换服务器……");
+        System.out.println("MVC CONFIG  中 89、注册日期格式转换服务器……");
         DateFormatter dateFormatter = new DateFormatter();
         dateFormatter.setPattern("yyyy-MM-dd HH:mm:ss");
         return dateFormatter;

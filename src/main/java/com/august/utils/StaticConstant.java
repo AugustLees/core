@@ -112,4 +112,6 @@ public class StaticConstant {
     public static final int SPRING_MVC_CONFIG_CACHE_SECONDS = 60;
     //SPRING_MVC配置文件中国际化资源基本名称
     public static final String SPRING_MVC_CONFIG_BASE_NAMES = "config.messages";
+    //CACHING_CONFIG文件中配置缓存路径
+    public static final String CACHING_CONFIG_CLASSPATH = "config/ehcache.xml";
 }
