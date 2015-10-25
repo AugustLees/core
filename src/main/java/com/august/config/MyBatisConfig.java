@@ -51,7 +51,6 @@ public class MyBatisConfig {
     @Bean(name = "myBatisTransactionManager")
 //    @Qualifier(value = "myBatis")
     public DataSourceTransactionManager datasourcetransactionManager() throws SQLException {
-        System.out.println("MyBatisConfig 中 1、 配置事务管理器……");
         LOGGER.debug("MyBatisConfig 中 1、 配置事务管理器……");
         DataSourceTransactionManager dataSourcetransactionManager = new DataSourceTransactionManager();
         dataSourcetransactionManager.setDataSource(druidDataSource);
@@ -66,7 +65,6 @@ public class MyBatisConfig {
      */
     @Bean(name = "myBatisSqlSessionFactory")
     public SqlSessionFactoryBean sqlSessionFactory() throws Exception {
-        System.out.println("MyBatisConfig 中 2、 初始化SQLSessionFactory……");
         LOGGER.debug("MyBatisConfig 中 2、 初始化SQLSessionFactory…………");
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
         //指定数据源
@@ -84,7 +82,6 @@ public class MyBatisConfig {
     @Bean(name = "MyBatisConfigDataSourceInitializer")
     public DataSourceInitializer dataSourceInitializer() {
         LOGGER.debug("MyBatisConfig 中 10、配置 数据库初始化……");
-        System.out.println("MyBatisConfig 中 10、数据库初始化");
         DataSourceInitializer dataSourceInitializer = new DataSourceInitializer();
         dataSourceInitializer.setDataSource(druidDataSource);
         ResourceDatabasePopulator databasePopulator = new ResourceDatabasePopulator();

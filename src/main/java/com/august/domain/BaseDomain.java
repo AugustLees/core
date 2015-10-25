@@ -1,5 +1,8 @@
 package com.august.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -19,13 +22,15 @@ public class BaseDomain {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false, length = 20)
+    @Column(name = "id", nullable = false, length = 20, insertable = true, updatable = false)
     private Long id;
 
     /**
      * 创建日期
      */
-    @Column(name = "create_time", nullable = false, insertable = true, updatable = false)
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @Column(name = "create_time", insertable = true, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createTime;
 
@@ -33,6 +38,8 @@ public class BaseDomain {
     /**
      * 修改日期
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @Column(name = "update_time")
     @Temporal(TemporalType.TIMESTAMP)
     private Date updateTime;
@@ -40,6 +47,8 @@ public class BaseDomain {
     /**
      * 删除日期
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @Column(name = "delete_time")
     @Temporal(TemporalType.TIMESTAMP)
     private Date deleteTime;
@@ -47,13 +56,13 @@ public class BaseDomain {
     /**
      * 创建人信息
      */
-    @Column(name = "creator", nullable = false, insertable = false, updatable = false)
+    @Column(name = "creator", nullable = false, insertable = true, updatable = false)
     private String creator;
 
     /**
      * 修改人信息
      */
-    @Column(name = "creator")
+    @Column(name = "updater")
     private String updater;
 
     /**

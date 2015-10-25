@@ -53,7 +53,7 @@ public class PersistenceConfig {
     String hibernate_show_sql;
     @Value("${hibernateFormat_sql:true}")
     String hibernate_format_sql;
-    @Value("${hibernateHbm2ddlAuto:update}")
+    @Value("${hibernateHbm2ddlAuto:create}")
     String hibernate_hbm2ddl_auto;
 
     @Value("${init-db:false}")
@@ -66,7 +66,6 @@ public class PersistenceConfig {
     @Bean(name = "jpaVendorAdapter")
     public HibernateJpaVendorAdapter hibernateJpaVendorAdapter() {
         LOGGER.debug("PersistenceConfig 中 配置 4、JPA 提供商的适配器……");
-        System.out.println("PersistenceConfig 中 4、配置 JPA 提供商的适配器……");
         HibernateJpaVendorAdapter hibernateJpaVendorAdapter = new HibernateJpaVendorAdapter();
         hibernateJpaVendorAdapter.setDatabase(Database.MYSQL);
         hibernateJpaVendorAdapter.setGenerateDdl(Boolean.valueOf(hibernate_hbm2ddl_auto));
@@ -82,7 +81,6 @@ public class PersistenceConfig {
     @Bean(name = "persistenceProvider")
     public HibernatePersistenceProvider hibernatePersistenceProvider() {
         LOGGER.debug("PersistenceConfig 中 2、配置 持久化类服务提供者……");
-        System.out.println("PersistenceConfig 中 2、配置 持久化类服务提供者……");
         HibernatePersistenceProvider hibernatePersistenceProvider = new HibernatePersistenceProvider();
         return hibernatePersistenceProvider;
     }
@@ -95,7 +93,6 @@ public class PersistenceConfig {
     @Bean(name = "jpaDialect")
     public HibernateJpaDialect hibernateJpaDialect() {
         LOGGER.debug("PersistenceConfig 中 3、配置 JPA方言……");
-        System.out.println("PersistenceConfig 中 3、配置 JPA方言……");
         return new HibernateJpaDialect();
     }
 
@@ -108,7 +105,6 @@ public class PersistenceConfig {
     @Bean(name = "jpaEntityManagerFactory")
     public LocalContainerEntityManagerFactoryBean jpaEntityManagerFactory() {
         LOGGER.debug("PersistenceConfig 中 1、配置 EntityManagerFactory……");
-        System.out.println("PersistenceConfig 中 1、配置 EntityManagerFactory……");
         LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
         localContainerEntityManagerFactoryBean.setDataSource(druidDataSource);
 
@@ -151,7 +147,6 @@ public class PersistenceConfig {
     @Qualifier(value = "JPA")
     public JpaTransactionManager jpaTransactionManager() {
         LOGGER.debug("PersistenceConfig 中 5、配置 JPA 使用的事务管理器transactionManager……");
-        System.out.println("PersistenceConfig 中 5、配置 JPA 使用的事务管理器 transactionManager……");
         JpaTransactionManager jpaTransactionManager = new JpaTransactionManager();
         jpaTransactionManager.setDataSource(druidDataSource);
         jpaTransactionManager.setEntityManagerFactory(jpaEntityManagerFactory().getObject());
@@ -161,7 +156,6 @@ public class PersistenceConfig {
     @Bean
     public DataSourceInitializer dataSourceInitializer() {
         LOGGER.debug("PersistenceConfig 中 10、配置 数据库初始化……");
-        System.out.println("PersistenceConfig 中 10、数据库初始化");
         DataSourceInitializer dataSourceInitializer = new DataSourceInitializer();
         dataSourceInitializer.setDataSource(druidDataSource);
         ResourceDatabasePopulator databasePopulator = new ResourceDatabasePopulator();
@@ -170,7 +164,6 @@ public class PersistenceConfig {
         dataSourceInitializer.setEnabled(Boolean.parseBoolean(initDatabase));
         return dataSourceInitializer;
     }
-
 
 
     /**

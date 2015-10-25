@@ -27,20 +27,22 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-//    @ResponseBody
+    @ResponseBody
     @RequestMapping(value = "/addUser")
-    public Response addUser(String name) {
+    public String addUser(String name) {
         LOGGER.debug("===========================================》添加员工信息接收请求");
         User user = new User();
         user.setName(name + new Date().getTime());
         user.setEmail("邮件地址");
         user.setBirthday(new Date());
         user.setPassword("密码测试");
+        user.setCreator("系统管理员");
         userService.addUser(user);
         Response response=new Response();
         response.setIsSuccess(true);
         response.setReason("添加成功!");
-        return response;
+//        return response;
+        return "添加成功!";
     }
 
     //加了@ResponseBody注解后，return的数据如何解析就是这个属性配置的Converter负责的

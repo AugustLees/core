@@ -1,8 +1,6 @@
 package com.august.config;
 
 import com.august.utils.StaticConstant;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -13,9 +11,9 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.format.FormatterRegistrar;
 import org.springframework.format.datetime.DateFormatter;
 import org.springframework.format.datetime.DateFormatterRegistrar;
-import org.springframework.format.datetime.standard.DateTimeFormatterRegistrar;
 import org.springframework.format.support.FormattingConversionServiceFactoryBean;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Controller;
@@ -31,9 +29,9 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
 import java.nio.charset.Charset;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -55,47 +53,6 @@ import java.util.Set;
 public class MVCConfig extends WebMvcConfigurerAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(MVCConfig.class);
 
-    //控制日期格式的
-    @Bean(name = "conversionService")
-    public FormattingConversionServiceFactoryBean formattingConversionServiceFactoryBean() {
-        LOGGER.debug("MVC CONFIG  中 1、注册日期格式转换服务器……");
-        System.out.println("MVC CONFIG  中 1、注册日期格式转换服务器……");
-        FormattingConversionServiceFactoryBean formattingConversionServiceFactoryBean = new FormattingConversionServiceFactoryBean();
-        //关闭默认转换器
-        formattingConversionServiceFactoryBean.setRegisterDefaultFormatters(false);
-        //增加格式转换注册器列表
-        Set<FormatterRegistrar> formatterRegistrars = new HashSet<FormatterRegistrar>();
-        formatterRegistrars.add(dateFormatterRegistrar());
-        formattingConversionServiceFactoryBean.setFormatterRegistrars(formatterRegistrars);
-        return formattingConversionServiceFactoryBean;
-    }
-
-    /**
-     * 创建日期格式注册机
-     *
-     * @return
-     */
-    public DateFormatterRegistrar dateFormatterRegistrar() {
-        LOGGER.debug("MVC CONFIG  中 90、注册日期格式转换服务器……");
-        System.out.println("MVC CONFIG  中 90、注册日期格式转换服务器……");
-        DateFormatterRegistrar dateFormatterRegistrar = new DateFormatterRegistrar();
-        dateFormatterRegistrar.setFormatter(dateFormatter());
-        return dateFormatterRegistrar;
-    }
-
-    /**
-     * 创建日期格式转换器
-     *
-     * @return
-     */
-    public DateFormatter dateFormatter() {
-        LOGGER.debug("MVC CONFIG  中 89、注册日期格式转换服务器……");
-        System.out.println("MVC CONFIG  中 89、注册日期格式转换服务器……");
-        DateFormatter dateFormatter = new DateFormatter();
-        dateFormatter.setPattern("yyyy-MM-dd HH:mm:ss");
-        return dateFormatter;
-    }
-
     /**
      * 对模型视图名称的解析，即在模型视图名称添加前后缀
      *
@@ -103,8 +60,7 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
      */
     @Bean
     public InternalResourceViewResolver internalResourceViewResolver() {
-        LOGGER.debug("MVC CONFIG 中 7、对模型视图名称的解析，即在模型视图名称添加前后缀……");
-        System.out.println("MVC CONFIG 中 7、对模型视图名称的解析，即在模型视图名称添加前后缀……");
+        LOGGER.debug("MVC CONFIG 中 8、对模型视图名称的解析，即在模型视图名称添加前后缀……");
         InternalResourceViewResolver internalResourceViewResolver = new InternalResourceViewResolver();
         internalResourceViewResolver.setPrefix(StaticConstant.SPRING_MVC_CONFIG_PREFIX);
         internalResourceViewResolver.setSuffix(StaticConstant.SPRING_MVC_CONFIG_SUFFIX);
@@ -120,11 +76,10 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
      */
     @Bean
     public ResourceBundleMessageSource resourceBundleMessageSource() {
-        LOGGER.debug("MVC CONFIG 中 88、配置国际化资源文件信息……");
-        System.out.println("MVC CONFIG 中 88、配置国际化资源文件信息……");
+        LOGGER.debug("MVC CONFIG 中 7、配置国际化资源文件信息……");
         ResourceBundleMessageSource resourceBundleMessageSource = new ResourceBundleMessageSource();
         resourceBundleMessageSource.setBasenames(new String[]{StaticConstant.SPRING_MVC_CONFIG_BASE_NAMES});
-        resourceBundleMessageSource.setDefaultEncoding(StaticConstant.WEB_INITIALIZER_CHARACTER_ENCODING);
+        resourceBundleMessageSource.setDefaultEncoding(StaticConstant.CHARACTER);
         resourceBundleMessageSource.setCacheSeconds(StaticConstant.SPRING_MVC_CONFIG_CACHE_SECONDS);
         return resourceBundleMessageSource;
     }
@@ -137,53 +92,13 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
      */
     @Bean
     public CommonsMultipartResolver commonsMultipartResolver() {
-        LOGGER.debug("MVC CONFIG 中 8、设置文件上传管理器……");
-        System.out.println("MVC CONFIG 中 8、设置文件上传管理器……");
+        LOGGER.debug("MVC CONFIG 中 6、设置文件上传管理器……");
         CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
-        commonsMultipartResolver.setDefaultEncoding(StaticConstant.WEB_INITIALIZER_CHARACTER_ENCODING);
+        commonsMultipartResolver.setDefaultEncoding(StaticConstant.CHARACTER);
         commonsMultipartResolver.setMaxUploadSize(10000000L);
         return commonsMultipartResolver;
     }
 
-    @Bean
-    public ObjectMapper objectMapper() {
-        LOGGER.debug("MVC CONFIG 中 3、将时间格式器注入到mapper对象中……");
-        System.out.println("MVC CONFIG 中 3、将时间格式器注入到mapper对象中……");
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        //n//定义全局日期格式
-        objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
-        return objectMapper;
-    }
-
-
-    /**
-     * 默认情况下MappingJacksonHttpMessageConverter会设置content为application/json，在IE9下返回会出现提示下载的现象
-     *
-     * @return
-     */
-    @Bean
-    public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
-        LOGGER.debug("MVC CONFIG 中 2、注入MappingJackson2HttpMessageConverter组件避免出现下载现象……");
-        System.out.println("MVC CONFIG 中 2、注入MappingJackson2HttpMessageConverter组件避免出现下载现象…………");
-        MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
-        mappingJackson2HttpMessageConverter.setPrettyPrint(true);
-        mappingJackson2HttpMessageConverter.setObjectMapper(objectMapper());
-        mappingJackson2HttpMessageConverter.setSupportedMediaTypes(Arrays.asList(MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED));
-        return mappingJackson2HttpMessageConverter;
-    }
-
-    @Bean
-    public StringHttpMessageConverter stringHttpMessageConverter() {
-        LOGGER.debug("MVC CONFIG 中 6、注入stringHttpMessageConverter组件……");
-        System.out.println("MVC CONFIG 中 6、注入stringHttpMessageConverter组件…………");
-        StringHttpMessageConverter stringHttpMessageConverter = new StringHttpMessageConverter(Charset.forName("UTF-8"));
-        stringHttpMessageConverter.setWriteAcceptCharset(Charset.isSupported("UTF-8"));
-        stringHttpMessageConverter.setSupportedMediaTypes(Arrays.asList(
-                MediaType.TEXT_HTML,
-                MediaType.TEXT_PLAIN));
-        return stringHttpMessageConverter;
-    }
 
     /**
      * 如果项目的一些资源文件放在/WEB-INF/resources/下面
@@ -194,19 +109,10 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
      */
     @Override
     public void addResourceHandlers(final ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/resources/**/*").addResourceLocations("/WEB-INF/resources/");
+        registry.addResourceHandler("/resources/**").addResourceLocations("/WEB-INF/resources/").setCachePeriod(31556926);
+        registry.addResourceHandler("/base/**").addResourceLocations("/WEB-INF/base/");
     }
 
-    /**
-     * 本地化拦截器
-     *
-     * @return
-     */
-    @Bean
-    public LocaleChangeInterceptor localeChangeInterceptor() {
-        LOGGER.debug("MVCConfig 中 本地化拦截器 LocaleChangeInterceptor");
-        return new LocaleChangeInterceptor();
-    }
 
     /**
      * 基于cookie的本地化资源处理器
@@ -215,7 +121,7 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
      */
     @Bean(name = "localeResolver")
     public CookieLocaleResolver cookieLocaleResolver() {
-        LOGGER.debug("MVCConfig 中 基于cookie的本地化资源处理器 CookieLocaleResolver");
+        LOGGER.debug("MVCConfig 中 5、基于cookie的本地化资源处理器 CookieLocaleResolver");
         return new CookieLocaleResolver();
     }
 
@@ -226,9 +132,44 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        LOGGER.debug("MVCConfig 中 添加拦截器 addInterceptors start");
-        registry.addInterceptor(localeChangeInterceptor());
-        LOGGER.debug("MVCConfig 中 添加拦截器 addInterceptors end");
+        LOGGER.debug("MVCConfig 中 1、添加拦截器 addInterceptors start");
+        registry.addInterceptor(new LocaleChangeInterceptor());
+        LOGGER.debug("MVCConfig 中 1、添加拦截器 addInterceptors end");
+    }
+
+    @Override
+    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+        converters.add(stringHttpMessageConverter());
+        converters.add(mappingJackson2HttpMessageConverter());
+    }
+
+
+    /**
+     * 默认情况下MappingJacksonHttpMessageConverter会设置content为application/json，在IE9下返回会出现提示下载的现象
+     *
+     * @return
+     */
+    public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
+        LOGGER.debug("MVC CONFIG 中 4、注入MappingJackson2HttpMessageConverter组件避免出现下载现象……");
+        MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
+        mappingJackson2HttpMessageConverter.setPrettyPrint(true);
+        mappingJackson2HttpMessageConverter.setSupportedMediaTypes(Arrays.asList(MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED));
+        return mappingJackson2HttpMessageConverter;
+    }
+
+    public StringHttpMessageConverter stringHttpMessageConverter() {
+        LOGGER.debug("MVC CONFIG 中 3、注入stringHttpMessageConverter组件……");
+        StringHttpMessageConverter stringHttpMessageConverter = new StringHttpMessageConverter(Charset.forName(StaticConstant.CHARACTER));
+        stringHttpMessageConverter.setWriteAcceptCharset(Charset.isSupported(StaticConstant.CHARACTER));
+        stringHttpMessageConverter.setSupportedMediaTypes(Arrays.asList(
+                new MediaType(StaticConstant.SPRING_MVC_CONFIG_TEXT,
+                        StaticConstant.SPRING_MVC_CONFIG_PLAN,
+                        Charset.forName(StaticConstant.CHARACTER)),
+                new MediaType(StaticConstant.SPRING_MVC_CONFIG_TEXT,
+                        StaticConstant.SPRING_MVC_CONFIG_HTML,
+                        Charset.forName(StaticConstant.CHARACTER))
+        ));
+        return stringHttpMessageConverter;
     }
 }
 

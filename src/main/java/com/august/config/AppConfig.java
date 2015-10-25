@@ -25,8 +25,8 @@ import org.springframework.stereotype.Controller;
 //引入相关程序的配置文件
 @Import({MVCConfig.class,
         JavaMailConfig.class,
-        /* AopConfig.class,*/
-        MyBatisConfig.class,
+        AopConfig.class,
+//        MyBatisConfig.class,
         PersistenceConfig.class,
         CachingConfig.class,
         SchedulerConfig.class})
@@ -46,7 +46,6 @@ public class AppConfig {
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
         LOGGER.debug("AppConfig中PropertySourcesPlaceholderConfigurer initializer……");
-        System.out.println("AppConfig中PropertySourcesPlaceholderConfigurer initializer……");
         PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer = new PropertySourcesPlaceholderConfigurer();
         return propertySourcesPlaceholderConfigurer;
     }

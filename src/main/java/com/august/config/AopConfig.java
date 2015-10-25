@@ -117,7 +117,8 @@ public class AopConfig {
         Object returnValue = joinPoint.proceed(args);
         System.out.println("@Around：执行目标方法之后...");
         System.out.println("@Around：被织入的目标对象为：" + joinPoint.getTarget());
-        return "原返回值：" + returnValue + "，这是返回结果的后缀";
+//        return "原返回值：" + returnValue + "，这是返回结果的后缀";
+        return returnValue;
 
 
 //        System.out.println("-----aroundAdvice().invoke-----");

@@ -16,7 +16,7 @@ import javax.persistence.UniqueConstraint;
  * 用于定义任务调度信息
  */
 @Entity
-@Table(name = "", uniqueConstraints = {@UniqueConstraint(columnNames = {"job_name", "job_group"})})
+@Table(name = "jobSchedule", uniqueConstraints = {@UniqueConstraint(columnNames = {"job_name", "job_group"})})
 public class JobSchedule extends BaseDomain {
     //可运行状态
     public static final String STATUS_RUNNING = "1";

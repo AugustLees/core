@@ -9,6 +9,7 @@ import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
+import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.util.IntrospectorCleanupListener;
 import org.springframework.web.util.Log4jConfigListener;
@@ -38,7 +39,6 @@ public class WebApplicationInitialized implements WebApplicationInitializer {
     //实现onStartup方法，使程序在启动时主动加载该配置下的文件
     public void onStartup(ServletContext servletContext) throws ServletException {
         LOGGER.debug("WebApplicationInitializer initializer……");
-        System.out.println("WebApplicationInitializer initializer……");
 
         /**
          * 开始加载web.xml文件中配置信息
@@ -55,12 +55,12 @@ public class WebApplicationInitialized implements WebApplicationInitializer {
         //首先创建一个注解配置web引用上下文信息实例，
         AnnotationConfigWebApplicationContext rootContext = new AnnotationConfigWebApplicationContext();
         rootContext.setDisplayName(StaticConstant.WEB_INITIALIZER_DISPLAY_NAME);
+        /*********************注册添加监听器相关*************************************************/
+        this.addListener(servletContext, rootContext);
         //实现配置信息的注册，此处为配置全局上下文内容
         rootContext.register(AppConfig.class);
         //容器将传入的一个ServletContext(上下文)放入web应用中,这个WEB项目所有部分都将共享这个上下文
         rootContext.setServletContext(servletContext);
-        /*********************注册添加监听器相关*************************************************/
-        this.addListener(servletContext, rootContext);
         /*********************注册添加过滤器相关*************************************************/
         this.addFilter(servletContext);
         /*********************注册添加Servlet相关*************************************************/
@@ -105,14 +105,14 @@ public class WebApplicationInitialized implements WebApplicationInitializer {
         dispatcher.setLoadOnStartup(1);
         //设定拦截路径,全部通过请用 “/”
         dispatcher.addMapping(StaticConstant.WEB_INITIALIZER_SERVLET_MAPPING);
-        System.out.println("3.1、配置springMvc的servlet……");
+        LOGGER.debug("3.1、配置springMvc的servlet……");
 
         //2、启用druidDatasource的web监控功能
         ServletRegistration.Dynamic dynamic = servletContext.addServlet(StaticConstant.WEB_INITIALIZER_DRUID_SERVLET_NAME,
                 new StatViewServlet());
         dynamic.addMapping(StaticConstant.WEB_INITIALIZER_DRUID_SERVLET_MAPPING);
         //访问监控页面：http://ip：port/projectName/druid/index.html
-        System.out.println("3.2、配置启用druidDatasource的web监控功能的servlet……");
+        LOGGER.debug("3.2、配置启用druidDatasource的web监控功能的servlet……");
     }
 
     /**
@@ -131,7 +131,7 @@ public class WebApplicationInitialized implements WebApplicationInitializer {
         //允许强制转换为UTF-8编码
         characterEncodingFilter.setForceEncoding(true);
         //设定初始化字符集编码
-        characterEncodingFilter.setEncoding(StaticConstant.WEB_INITIALIZER_CHARACTER_ENCODING);
+        characterEncodingFilter.setEncoding(StaticConstant.CHARACTER);
         //将该过滤器添加到servlet上下文中并返回一个动态的过滤器注册机制
         FilterRegistration.Dynamic encodingFilter = servletContext.addFilter(StaticConstant.WEB_INITIALIZER_CHARACTER_ENCODING_FILTER,
                 characterEncodingFilter);
@@ -139,7 +139,7 @@ public class WebApplicationInitialized implements WebApplicationInitializer {
         encodingFilter.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.INCLUDE), false,
                 StaticConstant.WEB_INITIALIZER_CHARACTER_ENCODING_URL);
 
-        System.out.println("2.1、配置字符集过滤器部分……");
+        LOGGER.debug("2.1、配置字符集过滤器部分……");
 
         //2、启用druidDatasource的web监控功能
         WebStatFilter webStatFilter = new WebStatFilter();
@@ -149,7 +149,15 @@ public class WebApplicationInitialized implements WebApplicationInitializer {
         druidWebStatFilter.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.INCLUDE), false,
                 StaticConstant.WEB_INITIALIZER_DRUID_WEB_STAT_FILTER_URL);
 
-        System.out.println("2.2、配置启用druidDatasource的web监控功能过滤器部分……");
+        LOGGER.debug("2.2、配置启用druidDatasource的web监控功能过滤器部分……");
+
+        //创建shiro过滤器，用来管理相关权限设置
+        DelegatingFilterProxy delegatingFilterProxy = new DelegatingFilterProxy();
+        delegatingFilterProxy.setTargetFilterLifecycle(true);
+        FilterRegistration.Dynamic shiroFilter = servletContext.addFilter(StaticConstant.WEB_INITIALIZER_SHIRO_FILTER,
+                delegatingFilterProxy);
+        shiroFilter.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.INCLUDE), false,
+                StaticConstant.WEB_INITIALIZER_CHARACTER_ENCODING_URL);
     }
 
     /**
@@ -162,13 +170,7 @@ public class WebApplicationInitialized implements WebApplicationInitializer {
         /**
          * 第一部分：以下这段为添加listener部分
          */
-        //1、使用实例化的rootContext将创建一个上下文加载监听器
-        // ，并将全局的配置信息加载到servlet上下文中
-        //即启动Web容器时，自动装配ApplicationContext的配置信息
-        servletContext.addListener(new ContextLoaderListener(rootContext));
-        System.out.println("1.1、使用实例化的rootContext将创建一个上下文加载监听器，并将全局的配置信息加载到servlet上下文中……");
-
-        //2、添加Logger4j相关配置
+        //1、添加Logger4j相关配置
         //首先加载log4j的相关配置文件信息
         servletContext.setInitParameter(StaticConstant.WEB_INITIALIZER_LOG4J_CONFIG_LOCATION,
                 StaticConstant.WEB_INITIALIZER_LOG4J_CONFIG_LOCATION_PATH);
@@ -177,13 +179,19 @@ public class WebApplicationInitialized implements WebApplicationInitializer {
                 StaticConstant.WEB_INITIALIZER_LOG4J_REFRESH_INTERVAL_TIME);
         //增加log4j的监听器
         servletContext.addListener(Log4jConfigListener.class);
-        System.out.println("1.2、添加Logger4j相关配置……");
+        LOGGER.debug("1.1、添加Logger4j相关配置……");
+
+        //2、使用实例化的rootContext将创建一个上下文加载监听器
+        // ，并将全局的配置信息加载到servlet上下文中
+        //即启动Web容器时，自动装配ApplicationContext的配置信息
+        servletContext.addListener(new ContextLoaderListener(rootContext));
+        LOGGER.debug("1.2、使用实例化的rootContext将创建一个上下文加载监听器，并将全局的配置信息加载到servlet上下文中……");
 
         //3、主要负责处理由JavaBean Introspector使用而引起的缓冲泄露
         //创建一个防止内存溢出的监听器
         IntrospectorCleanupListener introspectorCleanupListener = new IntrospectorCleanupListener();
         //将监听器添加到上下文中
         servletContext.addListener(introspectorCleanupListener);
-        System.out.println("1.3、主要负责处理由JavaBean introspector使用而引起的缓冲泄露……");
+        LOGGER.debug("1.3、主要负责处理由JavaBean introspector使用而引起的缓冲泄露……");
     }
 }

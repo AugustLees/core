@@ -24,7 +24,7 @@ public class StaticConstant {
     public static final String WEB_INITIALIZER_LOG4J_REFRESH_INTERVAL_TIME = "60000";
 
     //定义WEB应用下使用字符集编码
-    public static final String WEB_INITIALIZER_CHARACTER_ENCODING = "UTF-8";//字符编码格式
+    public static final String CHARACTER = "UTF-8";//字符编码格式
 
     //定义WEB应用下初始化字符集名称
     public static final String WEB_INITIALIZER_CHARACTER_ENCODING_FILTER = "characterEncodingFilter";
@@ -53,14 +53,8 @@ public class StaticConstant {
     //定义web应用初始化DRUID_SERVLET的映射路径
     public static final String WEB_INITIALIZER_DRUID_SERVLET_MAPPING = "/druid/*";
 
-    //定义web应用下返回信息交给responseBody管理时的字符编码
-    public static final String CHARSET = ";charset=" + WEB_INITIALIZER_CHARACTER_ENCODING;
-
     //定义WEB应用中shiro过滤器的名称
     public static final String WEB_INITIALIZER_SHIRO_FILTER = "shiroDelegatingFilterProxy";
-
-    //定义定时任务出发时间表达式
-    public static final String CRON_TRIGGER = "0 0/1 * * * ?";//每隔5分钟触发一次
 
     //APP_CONFIG配置文件基本扫描路径,用于扫描service注解的相关路径
     public static final String APP_CONFIG_SERVICE_BASE_PACKAGES = "com.**.service";
@@ -88,6 +82,15 @@ public class StaticConstant {
 
     //定义SPRING_MVC中页面解析后缀
     public static final String SPRING_MVC_CONFIG_SUFFIX = ".jsp";
+
+    //定义SPRING_MVC中字符转换器text类型
+    public static final String SPRING_MVC_CONFIG_TEXT = "text";
+
+    //定义SPRING_MVC中字符转换器plan类型
+    public static final String SPRING_MVC_CONFIG_PLAN = "plan";
+
+    //定义SPRING_MVC中字符转换器html类型
+    public static final String SPRING_MVC_CONFIG_HTML = "html";
 
     //定义MybatisConfig中所指定的mapper文件的路径
     public static final String MYBATIS_BASE_PACKAGES = "com.**.dao.**.mapper";
