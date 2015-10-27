@@ -20,19 +20,36 @@ import java.util.Date;
 @Table(name = "user")
 public class User extends BaseDomain {
 
+    /**
+     * 用户姓名
+     */
+    @Column(name = "name")
     private String name;
 
+    /**
+     * 用户邮箱
+     */
     @Column(nullable = false, unique = true)
     private String email;
 
+    /**
+     * 用户密码
+     */
     @Column(nullable = false)
     private String password;
 
+    /**
+     * 出生日期
+     */
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
+    @Column(name = "birthday", updatable = false)
     private Date birthday;
 
-    @Column( /*precision = 12, scale = 2,*/insertable = true, updatable = true, columnDefinition = "DECIMAL(12,2) DEFAULT 0.00")
+    /**
+     * 薪资
+     */
+    @Column(insertable = true, updatable = true, columnDefinition = "DECIMAL(12,2) DEFAULT 0.00")
     private Double salary;
 
     public String getName() {

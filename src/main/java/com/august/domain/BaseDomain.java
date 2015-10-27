@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -15,7 +16,7 @@ import java.util.Date;
  */
 // JPA基类标识
 @MappedSuperclass
-public class BaseDomain {
+public class BaseDomain implements Serializable {
     /**
      * ID信息
      * 自增长字段
@@ -70,6 +71,9 @@ public class BaseDomain {
      */
     @Column(name = "deleter")
     private String deleter;
+
+    @Column(name = "remarks" ,length = 2000)
+    private String remarks;	// 备注
 
     public Long getId() {
         return id;
