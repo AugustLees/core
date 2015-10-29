@@ -1,6 +1,6 @@
 package com.august.common;
 
-import com.august.domain.hibernate.JobSchedule;
+import com.august.domain.JobSchedule;
 import com.august.utils.StaticConstant;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;

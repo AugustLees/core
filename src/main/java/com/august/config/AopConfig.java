@@ -1,6 +1,5 @@
 package com.august.config;
 
-import com.august.domain.hibernate.User;
 import com.august.utils.StaticConstant;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;

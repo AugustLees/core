@@ -1,6 +1,6 @@
 package com.august.dao.repositories;
 
-import com.august.domain.hibernate.Menu;
+import com.august.domain.Menu;
 
 /**
  * PROJECT_NAME: core

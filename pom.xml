@@ -28,6 +28,8 @@
         <activation.version>1.1.1</activation.version>
         <quartz.version>2.2.1</quartz.version>
         <ehcache.version>2.6.11</ehcache.version>
+        <commons-lang3.version>3.4</commons-lang3.version>
+        <shiro.version>1.2.2</shiro.version>
     </properties>
 
     <dependencies>
@@ -168,7 +170,12 @@
         <dependency>
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-spring</artifactId>
-            <version>1.2.2</version>
+            <version>${shiro.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang3.version}</version>
         </dependency>
     </dependencies>
     <build>

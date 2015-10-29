@@ -1,10 +1,10 @@
-package com.august.domain.hibernate;
+package com.august.domain;
 
-import com.august.domain.BaseDomain;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.Column;
+import java.beans.Transient;
 import java.util.List;
 
 /**
@@ -19,10 +19,10 @@ public class Menu extends BaseDomain {
     @Column(name = "parent", nullable = false)
     private Menu parent;                        // 父级菜单
 
-    @Column(name = "parentIds", length = 2000)
+    @Column(name = "parentIds", length = 2000,nullable = false)
     private String parentIds;                   // 所有父级编号
 
-    @Column(name = "parentIds", length = 100)
+    @Column(name = "parentIds", length = 100,nullable = false)
     private String name;                        // 名称
 
     @Column(name = "href", length = 2000)
@@ -132,6 +132,7 @@ public class Menu extends BaseDomain {
     }
 
     @JsonIgnore
+    @Transient
     public static String getRootId() {
         return "1";
     }

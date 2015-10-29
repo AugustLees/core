@@ -1,9 +1,9 @@
 package com.august.common;
 
-import com.august.domain.hibernate.JobSchedule;
+import com.august.domain.JobSchedule;
+import com.august.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

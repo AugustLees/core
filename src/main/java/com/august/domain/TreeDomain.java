@@ -1,7 +1,7 @@
 package com.august.domain;
 
+import com.august.utils.StringUtils;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import org.springframework.util.StringUtils;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
@@ -16,16 +16,15 @@ import javax.persistence.MappedSuperclass;
 // JPA基类标识
 @MappedSuperclass
 public abstract class TreeDomain<T> extends BaseDomain {
-    protected T parent;    // 父级编号
-    @Column(name = "parent_ids",length = 2000)
     protected String parentIds; // 所有父级编号
+    @Column(name = "parent_ids",length = 2000)
+    protected T parent;    // 父级编号
     @Column(name = "name",length = 100)
     protected String name;    // 机构名称
     @Column(name = "sort")
     protected Integer sort;        // 排序
 
     @JsonBackReference
-//    @NotNull
     public abstract T getParent();
 
     /**
@@ -58,11 +57,4 @@ public abstract class TreeDomain<T> extends BaseDomain {
         this.sort = sort;
     }
 
-    public String getParentId() {
-        String id = null;
-        if (parent != null){
-//            id = (String)Reflections.getFieldValue(parent, "id");
-        }
-        return StringUtils.isEmpty(id) ? id : "0";
-    }
 }

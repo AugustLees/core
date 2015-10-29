@@ -1,7 +1,6 @@
 package com.august.dao.repositories;
 
-import com.august.domain.hibernate.Role;
-import com.august.domain.hibernate.User;
+import com.august.domain.Role;
 
 /**
  * PROJECT_NAME: core

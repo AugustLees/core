@@ -1,8 +1,8 @@
 package com.august.service.util;
 
+import com.august.utils.StringUtils;
 import org.hibernate.criterion.LogicalExpression;
 import org.hibernate.criterion.MatchMode;
-import org.springframework.util.StringUtils;
 
 import java.util.Collection;
 

@@ -1,8 +1,6 @@
 package com.august.dao.repositories;
 
-import com.august.domain.hibernate.JobSchedule;
-import com.august.domain.hibernate.User;
-import org.springframework.data.repository.PagingAndSortingRepository;
+import com.august.domain.User;
 
 /**
  * PROJECT_NAME: core

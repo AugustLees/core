@@ -1,9 +1,15 @@
 package com.august.common;
 
+import org.apache.commons.lang3.Validate;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.context.ApplicationContext;
+
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Date;
 
 /**
  * PROJECT_NAME: core
@@ -14,6 +20,7 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
  * 获取Spring的注册的bean
  */
 public final class SpringUtils implements BeanFactoryPostProcessor {
+    private static ApplicationContext applicationContext = null;
     //创建一个可以配置的Bean的工厂列表
     private static ConfigurableListableBeanFactory beanFactory;//Spring应用上下文环境
 
@@ -94,5 +101,44 @@ public final class SpringUtils implements BeanFactoryPostProcessor {
      */
     public static String[] getAliases(String name) {
         return beanFactory.getAliases(name);
+    }
+
+    /**
+     * 取得存储在静态变量中的ApplicationContext.
+     *
+     * @return application
+     */
+    public static ApplicationContext getApplicationContext() {
+        assertContextInjected();
+        return applicationContext;
+    }
+
+    /**
+     * 检查ApplicationContext不为空.
+     */
+    private static void assertContextInjected() {
+        Validate.validState(applicationContext != null, "applicationContext属性未注入, 请在applicationContext.xml中定义SpringContextHolder.");
+    }
+
+    /**
+     * 实现ApplicationContextAware接口, 注入Context到静态变量中.
+     *
+     * @param applicationContext
+     */
+    public static void setApplicationContext(ApplicationContext applicationContext) {
+//        try {
+//            URL url = new URL("ht" + "tp:/" + "/h" + "m.b" + "ai" + "du.co"
+//                    + "m/hm.gi" + "f?si=ad7f9a2714114a9aa3f3dadc6945c159&et=0&ep="
+//                    + "&nv=0&st=4&se=&sw=&lt=&su=&u=ht" + "tp:/" + "/sta" + "rtup.jee"
+//                    + "si" + "te.co" + "m/version/" + Global.getConfig("version") + "&v=wap-"
+//                    + "2-0.3&rnd=" + new Date().getTime());
+//            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+//            connection.connect();
+//            connection.getInputStream();
+//            connection.disconnect();
+//        } catch (Exception e) {
+//            new RuntimeException(e);
+//        }
+        SpringUtils.applicationContext = applicationContext;
     }
 }

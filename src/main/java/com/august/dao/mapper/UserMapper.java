@@ -1,6 +1,6 @@
 package com.august.dao.mapper;
 
-import com.august.domain.hibernate.User;
+import com.august.domain.User;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;

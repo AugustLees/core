@@ -1,9 +1,10 @@
 package com.august.controller;
 
 import com.august.common.RetObj;
-import com.august.domain.hibernate.JobSchedule;
+import com.august.domain.JobSchedule;
 import com.august.service.JobScheduleService;
 import com.august.common.SpringUtils;
+import com.august.utils.StringUtils;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.SchedulerException;
 import org.slf4j.Logger;
@@ -14,7 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 

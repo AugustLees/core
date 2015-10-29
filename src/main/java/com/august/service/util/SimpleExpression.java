@@ -1,9 +1,9 @@
 package com.august.service.util;
 
-import org.springframework.util.StringUtils;
+
+import com.august.utils.StringUtils;
 
 import javax.persistence.criteria.*;
-import java.util.List;
 
 /**
  * PROJECT_NAME: core

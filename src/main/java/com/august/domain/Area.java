@@ -1,6 +1,5 @@
-package com.august.domain.hibernate;
+package com.august.domain;
 
-import com.august.domain.TreeDomain;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.Column;
@@ -17,7 +16,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "area")
 public class Area extends TreeDomain<Area> {
-    @Column(name = "name" ,length = 1)
+    @Column(name = "name" ,length = 1,nullable = false)
     private String code;    // 区域编码
     @Column(name = "name" ,length = 100)
     private String type;    // 区域类型（1：国家；2：省份、直辖市；3：地市；4：区县）
@@ -25,12 +24,12 @@ public class Area extends TreeDomain<Area> {
     @JsonBackReference
     @Override
     public Area getParent() {
-        return null;
+        return parent;
     }
 
     @Override
     public void setParent(Area parent) {
-
+        this.parent = parent;
     }
 
     public String getCode() {

@@ -1,7 +1,7 @@
 package com.august.controller;
 
 import com.august.common.Response;
-import com.august.domain.hibernate.User;
+import com.august.domain.User;
 import com.august.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

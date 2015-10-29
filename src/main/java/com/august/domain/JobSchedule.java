@@ -1,4 +1,4 @@
-package com.august.domain.hibernate;
+package com.august.domain;
 
 import com.august.domain.BaseDomain;
 
