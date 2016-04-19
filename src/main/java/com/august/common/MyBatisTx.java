@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 
 /**
  * PROJECT_NAME: core
- * PACKAGE_NAME: com.august.utils
+ * PACKAGE_NAME: com.august.modules.system.utils
  * Author: August
  * Update: August(2015/9/19)
  * Description:配置Mybatis管理的事务控制器

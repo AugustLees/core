@@ -1,7 +1,7 @@
 package com.august.common;
 
-import com.august.domain.JobSchedule;
-import com.august.utils.StringUtils;
+import com.august.modules.system.domain.JobSchedule;
+import com.august.common.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,7 +10,7 @@ import java.lang.reflect.Method;
 
 /**
  * PROJECT_NAME: core
- * PACKAGE_NAME: com.august.utils
+ * PACKAGE_NAME: com.august.modules.system.utils
  * Author: August
  * Update: August(2015/9/27)
  * Description:任务调度工具类

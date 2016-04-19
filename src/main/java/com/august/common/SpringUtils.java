@@ -13,7 +13,7 @@ import java.util.Date;
 
 /**
  * PROJECT_NAME: core
- * PACKAGE_NAME: com.august.utils
+ * PACKAGE_NAME: com.august.modules.system.utils
  * Author: August
  * Update: August(2015/9/24)
  * Description:定义一个spring的工具类，该类需要实现BeanFactoryPostProcessor，用来

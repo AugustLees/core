@@ -1,0 +1,15 @@
+该路径下只放置整个项目下通用部分
+该路径下文件目录如下：
+annotation
+beanValidator
+config
+filter
+mapper
+persistence
+shiro
+service
+servlet
+supCan
+utils
+web
+xStream
